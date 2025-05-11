@@ -2,6 +2,20 @@
 
 A comprehensive system for managing library books, borrowing, and online purchases.
 
+## Features
+
+- User registration and authentication
+- Book browsing and searching
+- Book borrowing and return management
+- Shopping cart and checkout functionality
+- Admin panel for book and user management
+- Author management
+- Responsive design for mobile and desktop
+
+## Live Demo
+
+Visit [https://github.com/oyaon/LMSG](https://github.com/oyaon/LMSG) to see the project repository.
+
 ## Migration Guide
 
 This guide provides instructions for migrating the existing LMS application to the new architecture.
