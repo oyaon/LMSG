@@ -1,0 +1,27 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "bookname",
+    "bookauthor",
+    "bookcategory",
+    "bookquantity",
+    "bookprice",
+    "bookdescription",
+    "pdfs",
+    "ssssiisi",
+    "mysqli",
+    "uniqid",
+    "unlink"
+  ],
+  "ignoreRegExpList": [
+    "\\b[isdb]+\\b"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "vendor/**",
+    ".git/**",
+    "*.min.js",
+    "*.min.css"
+  ]
+}
