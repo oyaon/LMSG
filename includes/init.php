@@ -1,8 +1,9 @@
 <?php
 /**
- * Initialization File
+ * Unified Initialization File
  * 
  * Loads all required classes and starts the session
+ * Consolidates includes/init.php and includes/init_simple.php
  */
 
 // Start session if not already started
@@ -13,8 +14,11 @@ if (session_status() == PHP_SESSION_NONE) {
 // Load configuration
 require_once __DIR__ . '/../config/config.php';
 
-// Load classes
+// Load Database class and initialize singleton
 require_once __DIR__ . '/Database.php';
+$db = Database::getInstance();
+
+// Load helper and other classes
 require_once __DIR__ . '/Helper.php';
 require_once __DIR__ . '/DatabaseOperations.php';
 require_once __DIR__ . '/User.php';
@@ -24,9 +28,9 @@ require_once __DIR__ . '/Borrow.php';
 require_once __DIR__ . '/Cart.php';
 require_once __DIR__ . '/Author.php';
 require_once __DIR__ . '/DatabaseBackup.php';
+require_once __DIR__ . '/components.php';
 
 // Initialize objects
-$db = Database::getInstance();
 $dbOps = new DatabaseOperations();
 $user = new User();
 $book = new Book();

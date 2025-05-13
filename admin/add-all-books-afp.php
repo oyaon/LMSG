@@ -57,8 +57,13 @@
 					<input type="number" class="form-control" id="book-price" name="bookprice" min="1">
 				</div>
 				<div class="mb-3">
-					<label class="form-label" for="pdf">Book pdf</label>
+					<label class="form-label" for="pdf">Book PDF</label>
 					<input type="file" name="pdf" id="pdf" class="form-control">
+				</div>
+				<div class="mb-3">
+					<label class="form-label" for="coverimage">Book Cover Image</label>
+					<input type="file" name="coverimage" id="coverimage" class="form-control">
+					<small class="form-text text-muted">Recommended size: 300x450 pixels. Max size: 5MB. Formats: JPG, PNG, GIF</small>
 				</div>
 				<button type="submit" class="btn btn-primary">Submit</button>
 			</form>

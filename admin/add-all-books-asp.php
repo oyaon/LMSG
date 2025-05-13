@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] == 0) {
             // Generate a unique filename
             $pdfFileName = uniqid() . '_' . basename($_FILES['pdf']['name']);
-            $targetPath = "../pdfs/" . $pdfFileName;
+            $targetPath = "../uploads/pdfs/" . $pdfFileName;
             
             // Check file size (limit to 10MB)
             if ($_FILES['pdf']['size'] > 10 * 1024 * 1024) {
@@ -63,9 +63,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
         // Use prepared statement for insertion
-        $stmt = $conn->prepare("INSERT INTO all_books 
+        $stmt = $mysqli->prepare("INSERT INTO all_books 
                                (name, author, category, description, pdf, quantity, price, cover_image) 
                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        
+        // Define coverImage before binding parameters
+        $coverImage = ''; // Empty cover image for now
         
         $stmt->bind_param("sssssids", 
             $bookData['name'], 
@@ -78,7 +81,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $coverImage
         );
         
-        $coverImage = ''; // Empty cover image for now
+        // Handle cover image upload if provided
+        if (isset($_FILES['coverimage']) && $_FILES['coverimage']['error'] == 0) {
+            $coverFileName = uniqid() . '_' . basename($_FILES['coverimage']['name']);
+            $coverTargetPath = "../uploads/covers/" . $coverFileName;
+            
+            // Check file size (limit to 5MB)
+            if ($_FILES['coverimage']['size'] > 5 * 1024 * 1024) {
+                throw new Exception("Cover image size exceeds the maximum allowed size (5MB)");
+            }
+            
+            // Check file type
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($_FILES['coverimage']['type'], $allowedTypes)) {
+                throw new Exception("Invalid cover image format. Only JPG, PNG, and GIF are allowed.");
+            }
+            
+            // Move uploaded file
+            if (move_uploaded_file($_FILES['coverimage']['tmp_name'], $coverTargetPath)) {
+                $coverImage = $coverFileName;
+            } else {
+                throw new Exception("Failed to upload cover image");
+            }
+        }
         
         if ($stmt->execute()) {
             // Set success message

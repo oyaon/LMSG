@@ -88,17 +88,16 @@ require_once __DIR__ . '/includes/components.php';
             <h3 class="text-center">Special Offers</h3>
             <div class="row">
                 <?php
-                $sql = "SELECT * FROM special_offer";
-                $result = $conn->query($sql);
-                while ($row = $result->fetch_assoc()) { ?>
+                $specialOffers = $db->fetchAll("SELECT * FROM special_offer");
+                foreach ($specialOffers as $row) { ?>
                     <div class="col-sm-6 col-md-4">
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-5 d-flex align-items-center">
                                     <div class="card-body">
-                                        <p class="card-text fs-5"><?php echo $row['header_top']; ?></p>
-                                        <h5 class="card-title fs-4"><?php echo $row['header']; ?></h5>
-                                        <p class="card-text fs-6"><?php echo $row['header_bottom']; ?></p>
+                                        <p class="card-text fs-5"><?php echo htmlspecialchars($row['header_top']); ?></p>
+                                        <h5 class="card-title fs-4"><?php echo htmlspecialchars($row['header']); ?></h5>
+                                        <p class="card-text fs-6"><?php echo htmlspecialchars($row['header_bottom']); ?></p>
                                         <a href="all-books.php" class="btn btn-primary">Browse Now</a>
                                     </div>
                                 </div>

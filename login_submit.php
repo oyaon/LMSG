@@ -1,30 +1,6 @@
 <?php
-	require('admin/db-connect.php');
-	session_start();
-
-	$email = $_POST['email'];
-	$pass = $_POST['password'];
-
-	$query = "SELECT * FROM users WHERE email='$email' AND password='$pass' ";
-	$result = $conn->query($query);
-	$row = $result->fetch_assoc();
-	$user_type = $row['user_type'];
-
-	if ($row != null) {
-		$_SESSION['email'] = $email;
-		$_SESSION['user_type'] = $user_type;
-
-		if ($row['user_type'] == 1) {
-			header("Location:index.php");
-		}
-		else if($row['user_type'] == 0){
-			header("Location:admin/index.php");
-		}
-		else{
-			echo 'Wrong email/password';
-		}
-	}
-	else{
-		echo 'please input correct email/password';
-	}
-?>
+// Deprecated: login_submit.php is no longer used as login is handled in login.php with CSRF protection and User class authentication.
+// It is recommended to remove this file to avoid confusion and security risks.
+http_response_code(404);
+echo "Page not found.";
+exit;

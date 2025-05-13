@@ -1,38 +1,8 @@
 <?php
 // Include necessary files
-require_once "includes/init_simple.php";
+require_once "includes/init.php";
 include "header.php";
 // navbar is already included in header.php, no need to include it again
-
-// Check if there's a flash message
-$flashMessage = '';
-$flashType = '';
-if (isset($_SESSION['flash_message'])) {
-    $flashMessage = $_SESSION['flash_message'];
-    $flashType = $_SESSION['flash_type'] ?? 'info';
-    unset($_SESSION['flash_message']);
-    unset($_SESSION['flash_type']);
-}
-
-// Check if there's a redirect URL
-$redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 'index.php';
-?>
-
-<div class="container my-5 fade-in">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="auth-card card shadow">
-                <div class="card-header bg-white">
-                    <h3>Login to Your Account</h3>
-                </div>
-                <div class="card-body">
-                    <?php if ($flashMessage): ?>
-                        <?php echo renderAlert($flashMessage, $flashType); ?>
-                    <?php endif; ?>
-                    
-                    <form action="login_submit.php" method="POST" class="needs-validation" novalidate>
-                        <!-- Hidden redirect field -->
-                        <input type="hidden" name="redirect" value="<?php echo $redirectUrl; ?>"
 
 // Check if there's a flash message
 $flashMessage = '';

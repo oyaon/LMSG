@@ -10,7 +10,7 @@
 				<a href="users.php" class="list-group-item list-group-item-action list-group-item-light">Users</a>
 				<a href="entry_and_fines.php" class="list-group-item list-group-item-action list-group-item-light">Entry and fines</a>
 				<a href="database-backup.php" class="list-group-item list-group-item-action list-group-item-light">Database Backup</a>
-				<a href="../logout_page.php" class="list-group-item list-group-item-action list-group-item-light">Log Out</a>
+				<a href="../logout.php" class="list-group-item list-group-item-action list-group-item-light">Log Out</a>
 			</div>
 		</div>
 		<div class="col-lg-9 col-md-8 col-sm-12">

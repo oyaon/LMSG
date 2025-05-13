@@ -1,6 +1,6 @@
 <?php
 // Include necessary files
-require_once "includes/init_simple.php";
+require_once "includes/init.php";
 include "header.php";
 include "navbar.php";
 

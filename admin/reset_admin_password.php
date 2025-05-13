@@ -6,7 +6,7 @@
  */
 
 // Include initialization file
-require_once '../includes/init.php';
+require_once __DIR__ . '/../includes/init.php';
 
 // New password for admin
 $newPassword = 'admin123';

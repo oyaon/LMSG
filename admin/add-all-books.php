@@ -55,7 +55,7 @@
                     <tbody>
                         <?php
                         $sql = "SELECT * FROM `all_books` ORDER BY `id` ASC";
-                        $result = $conn->query($sql);
+                        $result = $mysqli->query($sql);
                         $data = [];
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
@@ -64,7 +64,7 @@
                             }
 
                             $sql = "SELECT `book_id` FROM `borrow_history`;";
-                            $result = $conn->query($sql);
+                            $result = $mysqli->query($sql);
                             while ($row = $result->fetch_assoc()){
                                 for($i=0; $i<sizeof($data); $i++) {
                                     if($data[$i]["id"]==$row["book_id"]){

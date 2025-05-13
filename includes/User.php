@@ -172,6 +172,9 @@ class User {
         );
         
         if ($user && password_verify($password, $user['password'])) {
+            // Regenerate session ID to prevent session fixation
+            session_regenerate_id(true);
+
             // Set user properties
             $this->id = $user['id'];
             $this->firstName = $user['first_name'];
