@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="pb-2 mt-4 mb-2 border-bottom">
+    <h1>Available Courses</h1>
+  </div>
+  {% if courses %}
+    <div class="list-group">
+      {% for course in courses %}
+        <a href="{{ url_for('course_detail', course_id=course.id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ course.title }}</h5>
+            <small class="text-muted">Instructor: {{ course.instructor.username }}</small>
+          </div>
+          <p class="mb-1">{{ course.description[:200] if course.description else 'No description available.' }}{% if course.description and course.description|length > 200 %}...{% endif %}</p>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="lead">No courses available at the moment. Check back soon!</p>
+  {% endif %}
+{% endblock %}
+
+
+

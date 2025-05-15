@@ -5,7 +5,7 @@
 <?php if(!isset($_SESSION["email"])): ?>
 	<script type="text/javascript">
 		alert("Login first!");
-		window.location.assign("login_page.php");
+		window.location.assign("login.php");
 	</script>
 	<?php exit(); ?>
 <?php endif; ?>

@@ -1,0 +1,93 @@
+/* LMS Book Card Component Styles */
+
+.book-card {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: 300px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  will-change: transform;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.book-cover {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.book-card__content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.book-card__title {
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 0.25rem;
+}
+
+.book-card__author {
+  font-size: 1rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.5rem;
+}
+
+.availability-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.available {
+  background-color: var(--success-color);
+}
+
+.checked-out {
+  background-color: var(--danger-color);
+}
+
+.on-hold {
+  background-color: var(--warning-color);
+}
+
+.book-card__availability {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--dark-color);
+  margin-bottom: 1rem;
+}
+
+.book-card__actions {
+  margin-top: auto;
+}
+
+.book-card__button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.book-card__button:hover {
+  background-color: var(--info-color);
+}

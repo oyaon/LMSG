@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LMS Component HTML Examples</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/lms-components.css" />
+  <link rel="stylesheet" href="../css/lms-book-card.css" />
+</head>
+<body>
+
+  <h1>Library Management System - Component Examples</h1>
+
+  <!-- Book Card Example -->
+  <section>
+    <h2>Book Card</h2>
+    <div class="book-card">
+      <!-- Removed broken image source -->
+      <div class="book-cover" style="background-color: #ddd; height: 200px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 1rem; border-radius: 0.5rem 0.5rem 0 0;">
+        No Image Available
+      </div>
+      <div class="book-card__content">
+        <h3 class="book-card__title">The Great Gatsby</h3>
+        <p class="book-card__author">by F. Scott Fitzgerald</p>
+        <div class="book-card__availability">
+          <span class="availability-dot available" aria-label="Available"></span> Available
+        </div>
+        <div class="book-card__actions">
+          <button class="book-card__button">Borrow</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search & Filters Example -->
+  <section>
+    <h2>Search & Filters</h2>
+    <div class="search-container d-flex align-items-center">
+      <input type="text" class="form-control search-bar" placeholder="Search books..." />
+      <button class="search-button">Search</button>
+    </div>
+    <div class="filter-tags mt-3">
+      <div class="filter-tag active">Fiction</div>
+      <div class="filter-tag">Non-fiction</div>
+      <div class="filter-tag">New Releases</div>
+      <div class="filter-tag">On Hold</div>
+    </div>
+  </section>
+
+  <!-- Checkout Timeline Example -->
+  <section>
+    <h2>Checkout Timeline</h2>
+    <div class="checkout-timeline">
+      <div class="checkout-step step-active">Request</div>
+      <div class="checkout-step">Approval</div>
+      <div class="checkout-step">Pickup</div>
+    </div>
+    <div class="due-date-picker">
+      <label for="due-date">Select Due Date:</label>
+      <input type="date" id="due-date" class="form-control" />
+    </div>
+  </section>
+
+  <!-- User Dashboard Example -->
+  <section>
+    <h2>User Dashboard - Checkout Table</h2>
+    <table class="table checkout-table library-table">
+      <thead>
+        <tr>
+          <th>Book Title</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Book Title">The Great Gatsby</td>
+          <td data-label="Due Date">2024-07-01</td>
+          <td data-label="Status"><span class="fine-status positive">Overdue</span></td>
+          <td data-label="Actions"><button class="renew-button">Renew</button></td>
+        </tr>
+        <tr>
+          <td data-label="Book Title">1984</td>
+          <td data-label="Due Date">2024-07-15</td>
+          <td data-label="Status">On Time</td>
+          <td data-label="Actions"><button class="renew-button">Renew</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Admin Control Panel Example -->
+  <section>
+    <h2>Admin Control Panel</h2>
+    <div class="inventory-health">
+      <div class="health-metric">Inventory Health: Good</div>
+      <div class="health-metric">Overdue Items: 5</div>
+    </div>
+    <div class="bulk-actions">
+      <button class="btn btn-secondary">Bulk Update</button>
+    </div>
+    <div class="user-role-badge">Admin</div>
+  </section>
+
+</body>
+</html>

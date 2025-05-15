@@ -107,8 +107,8 @@ $isAdmin = $isLoggedIn && isset($_SESSION['user_type']) && $_SESSION['user_type'
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $currentPage == 'login_page.php' ? 'active' : ''; ?>" 
-                           href="login_page.php">Login</a>
+                        <a class="nav-link <?php echo $currentPage == 'login.php' ? 'active' : ''; ?>" 
+                           href="login.php">Login</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentPage == 'registration_page.php' ? 'active' : ''; ?>" 
@@ -223,15 +223,15 @@ $isAdmin = $isLoggedIn && isset($_SESSION['user_type']) && $_SESSION['user_type'
                                 </li>
                             <?php endif; ?>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="logout_page.php">
+                            <li><a class="dropdown-item" href="logout.php">
                                 <i class="fas fa-sign-out-alt me-2"></i>Logout</a>
                             </li>
                         </ul>
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $currentPage == 'login_page.php' ? 'active' : ''; ?>" 
-                           href="login_page.php">Login</a>
+                        <a class="nav-link <?php echo $currentPage == 'login.php' ? 'active' : ''; ?>" 
+                           href="login.php">Login</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentPage == 'registration_page.php' ? 'active' : ''; ?>" 

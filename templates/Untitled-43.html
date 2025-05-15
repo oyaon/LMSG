@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block content %}
+  <h2>Add Lesson to: <a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.title }}</a></h2>
+  <hr>
+  <form method="POST" action="{{ url_for('add_lesson', course_id=course.id) }}" novalidate>
+    {{ form.hidden_tag() }}
+    {{ render_field(form.title) }}
+    {{ render_field(form.content, rows="10", placeholder="Enter lesson content here. You can use basic HTML.") }}
+    <div class="form-group">
+      {{ form.submit(class="btn btn-primary") }}
+      <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

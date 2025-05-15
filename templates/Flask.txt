@@ -1,0 +1,6 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+Werkzeug
+# email-validator (optional, for WTForms Email validator if not using a simpler check)

@@ -1,0 +1,210 @@
+/* LMS Component Styles */
+
+/* Book/Resource Cards */
+.book-card {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+}
+
+.book-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.book-cover {
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.availability-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.available {
+  background: var(--info-color);
+}
+
+.checked-out {
+  background: #dc3545;
+}
+
+.on-hold {
+  background: var(--secondary-color);
+}
+
+/* Search & Filters Interface */
+.search-container {
+  background: rgba(0, 86, 179, 0.05); /* var(--primary-color) with opacity */
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.filter-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  background: rgba(0, 86, 179, 0.1);
+  color: var(--primary-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-tag.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.search-suggestions {
+  border: 2px solid var(--primary-color);
+  border-top: none;
+  border-radius: 0 0 1rem 1rem;
+}
+
+/* Checkout/Reservation System */
+.checkout-timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.checkout-step {
+  width: 30%;
+  text-align: center;
+  z-index: 1;
+  position: relative;
+}
+
+.checkout-step::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+
+.step-active {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.due-date-picker {
+  border: 2px dashed rgba(0, 86, 179, 0.3);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+/* User Dashboard */
+.checkout-table {
+  --hover-bg: rgba(0, 86, 179, 0.03);
+}
+
+.checkout-table tr:hover {
+  background: var(--hover-bg);
+}
+
+.renew-button {
+  background: rgba(23, 162, 184, 0.1); /* var(--info-color) with opacity */
+  color: var(--info-color);
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.renew-button:hover {
+  background: var(--info-color);
+  color: white;
+}
+
+.fine-status {
+  font-weight: 500;
+}
+
+.fine-status.positive {
+  color: #dc3545;
+  animation: pulse-alert 1.5s infinite;
+}
+
+@keyframes pulse-alert {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Admin Control Panel */
+.inventory-health {
+  background: rgba(0, 86, 179, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.health-metric {
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bulk-actions {
+  background: rgba(52, 58, 64, 0.03); /* var(--dark-color) with opacity */
+  border: 2px dashed rgba(52, 58, 64, 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.user-role-badge {
+  background: rgba(108, 117, 125, 0.1); /* var(--secondary-color) with opacity */
+  color: var(--dark-color);
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .book-card {
+    flex-direction: column;
+  }
+  
+  .book-cover {
+    border-radius: 0.5rem 0.5rem 0 0;
+    height: 150px;
+  }
+  
+  .checkout-table td::before {
+    content: attr(data-label);
+    font-weight: 500;
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-container {
+    flex-direction: column;
+  }
+  
+  .filter-tags {
+    justify-content: center;
+  }
+}

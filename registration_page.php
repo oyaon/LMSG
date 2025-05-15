@@ -165,7 +165,7 @@ if (isset($_SESSION['flash_message'])) {
                     </form>
                     
                     <div class="mt-4 text-center">
-                        <p>Already have an account? <a href="login_page.php" class="fw-bold">Login here</a></p>
+                        <p>Already have an account? <a href="login.php" class="fw-bold">Login here</a></p>
                     </div>
                 </div>
             </div>

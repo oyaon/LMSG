@@ -13,4 +13,4 @@ $user->logout();
 
 // Redirect to login page
 Helper::setFlashMessage('success', 'You have been logged out successfully.');
-Helper::redirect('login_page.php');
+Helper::redirect('login.php');

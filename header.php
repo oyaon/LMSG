@@ -78,6 +78,11 @@ require_once __DIR__ . '/includes/components.php';
         </div>
     </nav>
 
+    <?php
+    require_once __DIR__ . '/includes/Helper.php';
+    Helper::displayFlashMessage();
+    ?>
+
     <!-- Main Content Section -->
     <div class="container mt-5 pt-5">
         <h1 class="text-center">Welcome to Gobindaganj Public Library</h1>

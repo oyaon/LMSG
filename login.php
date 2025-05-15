@@ -5,7 +5,7 @@
  * Handles user authentication
  */
 
-// Include initialization file
+ // Include initialization file
 require_once 'includes/init.php';
 
 // Check if user is already logged in
@@ -73,12 +73,12 @@ include 'header.php';
 // Removed include 'top-navbar.php' to avoid duplicate navbar since header.php already includes navbar
 ?>
 
-<div class="container py-5">
+<div class="container my-5 fade-in">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Login</h3>
+            <div class="auth-card card shadow">
+                <div class="card-header bg-white">
+                    <h3>Login to Your Account</h3>
                 </div>
                 <div class="card-body">
                     <?php Helper::displayFlashMessage(); ?>
@@ -98,21 +98,43 @@ include 'header.php';
                         
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo isset($email) ? $email : ''; ?>" required>
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo isset($email) ? $email : ''; ?>" required autocomplete="email" data-validate-email="true" placeholder="Enter your email address">
                         </div>
                         
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password" minlength="8" placeholder="Enter your password">
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me" value="1">
+                            <label class="form-check-label" for="remember_me">Remember me</label>
                         </div>
                         
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
                         </div>
                     </form>
+                    
+                    <div class="mt-4 text-center">
+                        <p>Don't have an account? <a href="register.php" class="fw-bold">Sign up</a></p>
+                        <p><a href="forgot-password.php">Forgot your password?</a></p>
+                    </div>
                 </div>
-                <div class="card-footer text-center">
-                    <p class="mb-0">Don't have an account? <a href="register.php">Register</a></p>
+                
+                <!-- Social Login Options -->
+                <div class="card-footer">
+                    <p class="text-center mb-3">Or login with</p>
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fab fa-google me-2"></i>Google
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fab fa-facebook-f me-2"></i>Facebook
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

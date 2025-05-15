@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="jumbotron pt-4 pb-4">
+    <h1 class="display-4">{{ course.title }}</h1>
+    <p class="lead">Instructor: {{ course.instructor.username }}</p>
+    <hr class="my-3">
+    <p>{{ course.description | safe }}</p> {# Use |safe carefully if description can contain user-input HTML #}
+    
+    {% if current_user.is_authenticated %}
+      {% if current_user.id == course.instructor_id %}
+        <a class="btn btn-info btn-sm" href="{{ url_for('add_lesson', course_id=course.id) }}">Add New Lesson</a>
+        {# TODO: Add Edit/Delete Course buttons for instructor #}
+      {% elif not is_enrolled %}
+        <form method="POST" action="{{ url_for('enroll_course', course_id=course.id) }}" style="display: inline;">
+          <button type="submit" class="btn btn-success btn-lg">Enroll Now</button>
+        </form>
+      {% else %}
+        <p class="text-success font-weight-bold">You are enrolled in this course.</p>
+      {% endif %}
+    {% else %}
+      <a href="{{ url_for('login', next=request.url) }}" class="btn btn-primary btn-lg">Login to Enroll</a>
+    {% endif %}
+  </div>
+
+  <h3>Course Lessons</h3>
+  {% if lessons %}
+    <div class="list-group">
+      {% for lesson in lessons %}
+        <a href="{{ url_for('view_lesson', lesson_id=lesson.id) }}" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Lesson {{ loop.index }}: {{ lesson.title }}</h5>
+            {% if current_user.is_authenticated and current_user.id == course.instructor_id %}
+              {# TODO: Add Edit/Delete Lesson buttons for instructor #}
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No lessons have been added to this course yet.</p>
+  {% endif %}
+{% endblock %}

@@ -38,11 +38,11 @@
 						</li> 					
 					<?php else: ?>
 						<li class="nav-item">
-							<a class="nav-link" href="login_page.php">Login</a>
+							<a class="nav-link" href="login.php">Login</a>
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link" href="registration_page.php">Register</a>
+							<a class="nav-link" href="register.php">Register</a>
 						</li>						
 					<?php endif; ?>
 				</ul>
