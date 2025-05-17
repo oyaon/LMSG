@@ -2,7 +2,7 @@
 // Include initialization file which loads all required classes
 require_once 'includes/init.php';
 include ("header.php"); 
-include ("top-navbar.php"); 
+// Removed include of top-navbar.php to avoid duplicate navigation bar
 ?>
 
 <div class="container pb-4">
@@ -18,7 +18,7 @@ include ("top-navbar.php");
                     // Determine image path - use default if not set
                     $imagePath = !empty($row['image_path']) ? $row['image_path'] : 'images/books1.png';
                     ?>
-                    <div class="col-sm-4 mb-3 mb-sm-3">
+                    <div class="col-sm-6 col-md-4 mb-3 mb-sm-3">
                         <div class="card p-3">
                             <img src="<?php echo htmlspecialchars($imagePath); ?>" class="card-img-top rounded-circle" alt="<?php echo htmlspecialchars($row['name']); ?>">
                             <div class="card-body text-center">

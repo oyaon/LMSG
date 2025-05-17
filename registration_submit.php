@@ -36,7 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = $user->register($userData);
 
     if ($userId) {
-        echo "Registration Successful.";
+        // Log the user in by setting session variables
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['email'] = $userData['email'];
+        $_SESSION['user_type'] = isset($userData['user_type']) ? $userData['user_type'] : 1;
+        $_SESSION['user_name'] = $userData['user_name'];  // Set user_name session variable
+
+        // Redirect to user profile page after successful registration and login
+        header('Location: user_profile.php');
+        exit;
     } else {
         echo "Registration failed. Email may already be registered.";
     }

@@ -1,8 +1,23 @@
 <?php 
 // Include initialization file which loads all required classes
 require_once 'includes/init.php';
+
+if (isset($_GET['t']) && $_GET['t'] === 'donation') {
+    // Redirect to donate.php for unified donation page
+    header('Location: donate.php');
+    exit;
+} else {
+    // Check if user is logged in and is admin
+    if (!$user->isLoggedIn() || !$user->isAdmin()) {
+        // Redirect to login page or show access denied
+        header('Location: login.php');
+        exit;
+    }
+}
+
 include ("header.php"); 
-include ("top-navbar.php"); 
+// Removed top-navbar.php to avoid duplicate navigation bar
+// include ("top-navbar.php"); 
 ?>
 
 <!-- handling form submission -->
@@ -12,51 +27,51 @@ Helper::displayFlashMessage();
 
 if(isset($_POST["add_book"])){
     try {
-        // Sanitize input data
-        $bookData = [
-            'name' => Helper::sanitize($_POST['book_name']),
-            'author' => Helper::sanitize($_POST['author']),
-            'category' => Helper::sanitize($_POST['cat']),
-            'description' => Helper::sanitize($_POST['des']),
-            'quantity' => (int)$_POST['quantity'],
-            'price' => isset($_POST['price']) ? (float)$_POST['price'] : 0
-        ];
-
-        // Handle file upload if exists
-        if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] === UPLOAD_ERR_OK) {
-            $fileTmpPath = $_FILES['pdf']['tmp_name'];
-            $fileName = $_FILES['pdf']['name'];
-            $fileSize = $_FILES['pdf']['size'];
-            $fileType = $_FILES['pdf']['type'];
-            $fileNameCmps = explode(".", $fileName);
-            $fileExtension = strtolower(end($fileNameCmps));
-
-            // Allowed file extensions and MIME types
-            $allowedExtensions = ['pdf'];
-            $allowedMimeTypes = ['application/pdf'];
-
-            if (in_array($fileExtension, $allowedExtensions) && in_array($fileType, $allowedMimeTypes)) {
-                // Sanitize file name
-                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-
-                // Directory in which the uploaded file will be moved
-                $uploadFileDir = __DIR__ . '/uploads/pdfs/';
-                if (!is_dir($uploadFileDir)) {
-                    mkdir($uploadFileDir, 0755, true);
-                }
-                $dest_path = $uploadFileDir . $newFileName;
-
-                if(move_uploaded_file($fileTmpPath, $dest_path)) {
-                    $bookData['pdf_path'] = 'uploads/pdfs/' . $newFileName;
-                } else {
-                    throw new Exception('There was an error moving the uploaded file.');
-                }
-            } else {
-                throw new Exception('Upload failed. Allowed file type: PDF.');
-            }
+        // Validate CSRF token
+        if (!isset($_POST['csrf_token']) || !Helper::validateCsrfToken($_POST['csrf_token'], 'add_book_form')) {
+            throw new Exception('Invalid CSRF token. Please refresh the page and try again.');
         }
 
-        // Add book using BookOperations class
+        // Sanitize and validate input data
+        $bookName = Helper::sanitize($_POST['book_name']);
+        $author = Helper::sanitize($_POST['author']);
+        $category = Helper::sanitize($_POST['cat']);
+        $description = Helper::sanitize($_POST['des']);
+        $quantity = (int)$_POST['quantity'];
+
+        // Validate required fields
+        if (empty($bookName) || empty($author) || empty($category) || empty($description)) {
+            throw new Exception('Please fill in all required fields.');
+        }
+
+        // Validate string lengths
+        if (strlen($bookName) > 255) {
+            throw new Exception('Book name must be less than 256 characters.');
+        }
+        if (strlen($author) > 255) {
+            throw new Exception('Author name must be less than 256 characters.');
+        }
+        if (strlen($category) > 100) {
+            throw new Exception('Category must be less than 101 characters.');
+        }
+        if (strlen($description) > 1000) {
+            throw new Exception('Description must be less than 1001 characters.');
+        }
+
+        // Validate numeric values
+        if ($quantity < 1) {
+            throw new Exception('Quantity must be at least 1.');
+        }
+
+        $bookData = [
+            'name' => $bookName,
+            'author' => $author,
+            'category' => $category,
+            'description' => $description,
+            'quantity' => $quantity
+        ];
+
+        // Pass $_FILES data to addBook for file uploads
         $bookId = $bookOps->addBook($bookData);
 
         if($bookId) {
@@ -81,7 +96,8 @@ if(isset($_POST["add_book"])){
 		<div class="col-12">
 			<h1 class="text-center my-4"><?php echo isset($_GET['t']) ? "Book donation form" : "Add books" ?></h1>
 
-			<form action="" method="POST" class="mx-auto p-4" style="width: 550px; border: 1px solid gray; border-radius: 23px;" enctype="multipart/form-data">
+<form action="" method="POST" class="mx-auto p-4" style="width: 550px; border: 1px solid gray; border-radius: 23px;" enctype="multipart/form-data">
+                <?php echo Helper::csrfTokenField('add_book_form'); ?>
 				<div class="form-group mb-2">
 					<label class="form-label" for="name">Book name</label>
 					<input type="text" name="book_name" id="name" required class="form-control">
@@ -107,16 +123,16 @@ if(isset($_POST["add_book"])){
 					<input type="number" name="quantity" id="quantity" min="1" value="1" required class="form-control">
 				</div>
 
-				<?php if(!isset($_GET['t'])): ?>
-					<div class="form-group mb-2">
-						<label class="form-label" for="price">Price</label>
-						<input type="number" name="price" id="price" min="0" required class="form-control">
-					</div>
-				<?php endif; ?>
+				<!-- Removed price input field -->
 
 				<div class="form-group mb-2">
 					<label class="form-label" for="pdf">Book pdf</label>
 					<input type="file" name="pdf" id="pdf" class="form-control">
+				</div>
+
+				<div class="form-group mb-2">
+					<label class="form-label" for="cover_image">Book image</label>
+					<input type="file" name="cover_image" id="cover_image" class="form-control" accept="image/*">
 				</div>
 
 				<div class="form-group mt-4 d-flex justify-content-center">

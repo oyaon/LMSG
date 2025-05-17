@@ -1,5 +1,4 @@
 <?php include ("header.php"); ?>
-<?php include ("top-navbar.php"); ?>
 <?php require_once("./admin/db-connect.php"); ?>
 
 <?php
@@ -37,9 +36,9 @@ if(!isset($_POST["submit"])){
 							</p>
 
 							<ul>
-								<li><u>Bkash:</u> 0178171685</li>
-								<li><u>Nagad:</u> 0178171685</li>
-								<li><u>Rocket:</u> 0178171685</li>
+								<li><u>Bkash:</u> 01830567270</li>
+								<li><u>Nagad:</u> 01830567270</li>
+								<li><u>Rocket:</u> 01830567270</li>
 							</ul>
 						</div>
 

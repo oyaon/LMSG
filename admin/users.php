@@ -25,7 +25,7 @@
 
             <div class="d-flex flex-column wrap">
                 <?php
-                $sql = "SELECT * FROM `users` WHERE `user_type`=1 ";
+                $sql = "SELECT * FROM `users` WHERE `user_type` IN (0,1) ";
                 if(isset($_GET['s'])){
                     $s = $_GET['s'];
                     $sql .= "AND (`first_name` LIKE ('%$s%') OR `last_name` LIKE ('%$s%') OR `email` LIKE ('%$s%')) ";
@@ -65,18 +65,22 @@
                                                         <a href="mailto:<?php echo $row["email"]; ?>"><?php echo $row["email"]; ?></a>
                                                     </div>
 
-                                                    <div class="col-6 mb-3">
-                                                        <h6>Entry fee</h6>
+<div class="col-6 mb-3">
+    <h6>Entry fee</h6>
 
-                                                        <?php echo $row["entry_fee_stat"] ? "<span class='text-success'>Paid</span>" : "<span class='text-danger'>Not Paid</span>"; ?>
-                                                    </div>
+    <?php if (isset($row["entry_fee_stat"]) && $row["entry_fee_stat"]): ?>
+        <span class="badge bg-success">Paid</span>
+    <?php else: ?>
+        <span class="badge bg-danger">Not Paid</span>
+    <?php endif; ?>
+</div>
                                                 </div>
                                             </div>
 
                                             <div class="d-flex p-4">
-                                                <?php if(!$row["entry_fee_stat"]): ?>
-                                                    <a class="btn btn-success" href="actions.php?a=entry_paid&t=<?php echo $row["email"]; ?>">Entry paid</a>
-                                                <?php endif; ?>
+<?php if(!isset($row["entry_fee_stat"]) || !$row["entry_fee_stat"]): ?>
+    <a class="btn btn-success" href="actions.php?a=entry_paid&t=<?php echo $row["email"]; ?>" onclick="return confirm('Mark entry fee as paid for this user?');">Entry paid</a>
+<?php endif; ?>
 
                                                 <a class="btn btn-primary" href="user_issue_history.php?u=<?php echo $row["email"]; ?>">View book list</a>
                                             </div>

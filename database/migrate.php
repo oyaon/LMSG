@@ -117,9 +117,9 @@ try {
             $authorStmt->close();
             
             // Insert book with author_id
-            $stmt = $conn->prepare("INSERT INTO all_books (id, name, author_id, author, category, description, quantity, price, pdf) 
-                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("isissidss", 
+            $stmt = $conn->prepare("INSERT INTO all_books (id, name, author_id, author, category, description, quantity, pdf) 
+                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("isississ", 
                 $row['id'],
                 $row['name'], 
                 $authorId,
@@ -127,7 +127,6 @@ try {
                 $row['category'], 
                 $row['description'], 
                 $row['quantity'], 
-                $row['price'], 
                 $row['pdf']
             );
             $stmt->execute();
@@ -225,6 +224,50 @@ try {
     }
 } catch (Exception $e) {
     logMigration("Error migrating payments: " . $e->getMessage());
+}
+
+/**
+ * Add tables for donations: money_donations and book_donations
+ */
+logMigration("Creating donations tables...");
+
+try {
+    $createMoneyDonationsTable = "
+    CREATE TABLE IF NOT EXISTS money_donations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_email VARCHAR(100) NOT NULL,
+        amount DECIMAL(10, 2) NOT NULL,
+        donation_date DATE NOT NULL,
+        transaction_id VARCHAR(100) NOT NULL,
+        donation_status ENUM('Pending', 'Completed', 'Failed') NOT NULL DEFAULT 'Completed',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ";
+    if ($conn->query($createMoneyDonationsTable) === TRUE) {
+        logMigration("money_donations table created or already exists.");
+    } else {
+        logMigration("Error creating money_donations table: " . $conn->error);
+    }
+
+    $createBookDonationsTable = "
+    CREATE TABLE IF NOT EXISTS book_donations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_email VARCHAR(100) NOT NULL,
+        book_id INT NOT NULL,
+        quantity INT NOT NULL,
+        donation_date DATE NOT NULL,
+        status ENUM('Pending', 'Received', 'Cancelled') NOT NULL DEFAULT 'Pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (book_id) REFERENCES all_books(id) ON DELETE CASCADE
+    );
+    ";
+    if ($conn->query($createBookDonationsTable) === TRUE) {
+        logMigration("book_donations table created or already exists.");
+    } else {
+        logMigration("Error creating book_donations table: " . $conn->error);
+    }
+} catch (Exception $e) {
+    logMigration("Exception creating donation tables: " . $e->getMessage());
 }
 
 // Migration complete

@@ -93,7 +93,7 @@ include 'header.php';
                         </div>
                     <?php endif; ?>
                     
-                    <form method="POST" action="">
+<form method="POST" action="login.php">
                         <?php echo Helper::csrfTokenField('login_form'); ?>
                         
                         <div class="mb-3">

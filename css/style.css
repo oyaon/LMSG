@@ -10,6 +10,8 @@
   --info-color: #17a2b8;
   --light-color: #f8f9fa;
   --dark-color: #343a40;
+  --footer-bg-color: #004080; /* Updated footer background color */
+  --footer-text-color: #e0e0e0; /* Updated footer text color */
 }
 
 /* Body Typography */
@@ -41,6 +43,10 @@ h1, h2, h3, h4, h5, h6 {
 .navbar .nav-link:hover,
 .navbar .nav-link:focus {
   color: var(--warning-color) !important;
+  outline: 3px solid var(--warning-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+  transition: color 0.3s ease, outline 0.3s ease;
 }
 
 /* Buttons */
@@ -197,4 +203,20 @@ a:focus {
     overflow-x: auto;
     white-space: nowrap;
   }
+}
+
+/* Footer Styles */
+footer {
+  background-color: var(--footer-bg-color) !important;
+  color: var(--footer-text-color) !important;
+}
+
+footer a {
+  color: var(--footer-text-color);
+}
+
+footer a:hover,
+footer a:focus {
+  color: var(--warning-color);
+  text-decoration: none;
 }
