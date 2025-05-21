@@ -30,7 +30,7 @@ $redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 
                         <?php echo renderAlert($flashMessage, $flashType); ?>
                     <?php endif; ?>
                     
-                    <form action="login_submit.php" method="POST" class="needs-validation" novalidate>
+                    <form action="login.php" method="POST" class="needs-validation" novalidate>
                         <!-- Hidden redirect field -->
                         <input type="hidden" name="redirect" value="<?php echo $redirectUrl; ?>">
                         

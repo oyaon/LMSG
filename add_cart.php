@@ -6,14 +6,17 @@
 		$book_id = $_GET['t'];
 		$user_email = $_SESSION['email'];
 		$date = date("Y-m-d");
-		$result = $conn->query("INSERT INTO `cart` VALUES(0, '$user_email', '$book_id', '$date', 0)");
-		if(!$result){
+
+		$stmt = $conn->prepare("INSERT INTO `cart` (id, user_email, book_id, date, status) VALUES (0, ?, ?, ?, 0)");
+		$stmt->bind_param("sis", $user_email, $book_id, $date);
+		if(!$stmt->execute()){
 			echo "Something went wrong. Please try again.";
 		}
 		else{
 			$quantity = (int)$_GET['q'] - 1;
-			$result = $conn->query("UPDATE `all_books` SET `quantity`=$quantity WHERE `id`=$book_id;");
-			if(!$result){
+			$stmt2 = $conn->prepare("UPDATE `all_books` SET `quantity`=? WHERE `id`=?");
+			$stmt2->bind_param("ii", $quantity, $book_id);
+			if(!$stmt2->execute()){
 				echo "Something went wrong. Please try again.";
 			}
 			else{ ?>

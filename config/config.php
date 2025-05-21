@@ -5,6 +5,13 @@
  * This file contains all configuration settings for the LMS application
  */
 
+// Session settings - moved to top to avoid headers already sent warnings
+if (session_status() == PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
+}
+
 // Environment setting
 define('ENVIRONMENT', 'development'); // Options: 'development', 'production'
 
@@ -30,13 +37,6 @@ if (!file_exists(UPLOAD_DIR)) mkdir(UPLOAD_DIR, 0755, true);
 if (!file_exists(BOOK_COVERS_DIR)) mkdir(BOOK_COVERS_DIR, 0755, true);
 if (!file_exists(PDF_FILES_DIR)) mkdir(PDF_FILES_DIR, 0755, true);
 if (!file_exists(AUTHOR_IMAGES_DIR)) mkdir(AUTHOR_IMAGES_DIR, 0755, true);
-
-// Session settings
-if (session_status() == PHP_SESSION_NONE) {
-    ini_set('session.cookie_httponly', 1);
-    ini_set('session.use_only_cookies', 1);
-    ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
-}
 
 // Error reporting is now handled in init.php based on ENVIRONMENT constant
 

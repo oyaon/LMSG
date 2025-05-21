@@ -27,4 +27,3 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('totalBooks', 'totalUsers', 'activeBorrows', 'recentActivities'));
     }
 }
-composer updatecopy temp-laravel\app\Http\Kernel.php LMS\lms-laravel\app\Http\Kernel.php

@@ -9,10 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Sanitize input data
-    $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
-    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $firstname = trim($_POST['firstname']);
+    $lastname = trim($_POST['lastname']);
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -23,20 +23,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check if email is already registered
-    $check_query = "SELECT * FROM users WHERE email='$email'";
-    $check_result = $conn->query($check_query);
-    if ($check_result->num_rows > 0) {
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
         echo "Email already registered.";
         die();
     }
+    $stmt->close();
+
+    // Hash the password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Insert user data into the database
-    $sql = "INSERT INTO users VALUES (0, '$firstname', '$lastname', '$username', '$email', '$password', 1, 0)";
-    if ($conn->query($sql)) {
+    $stmt = $conn->prepare("INSERT INTO users (id, first_name, last_name, user_name, email, password, user_type) VALUES (0, ?, ?, ?, ?, ?, 1)");
+    $stmt->bind_param("sssss", $firstname, $lastname, $username, $email, $hashed_password);
+    if ($stmt->execute()) {
         header("Location: ../login_page.php");
+        exit;
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $stmt->error;
     }
+    $stmt->close();
 }
+
 
 ?>

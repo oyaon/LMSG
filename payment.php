@@ -10,8 +10,12 @@ if(!isset($_POST["submit"])){
 	$ids = substr($ids, 0, -1);
 
 	if($total_price==0){
-		if($conn->query("INSERT INTO `payments` VALUES(0, '$email', '$ids', $total_price, '$date', '');")){
-			if($conn->query("UPDATE `cart` SET `status`=1 WHERE `user_email`='$email' AND `book_id` IN ($ids);")){
+		$stmt = $conn->prepare("INSERT INTO `payments` (id, email, book_ids, amount, date, transaction_id) VALUES (0, ?, ?, ?, ?, '')");
+		$stmt->bind_param("ssds", $email, $ids, $total_price, $date);
+		if($stmt->execute()){
+			$stmt2 = $conn->prepare("UPDATE `cart` SET `status`=1 WHERE `user_email`=? AND FIND_IN_SET(book_id, ?)");
+			$stmt2->bind_param("ss", $email, $ids);
+			if($stmt2->execute()){
 				?>
 				<script type="text/javascript">
 					alert("Payment Successful");
@@ -60,8 +64,12 @@ if(!isset($_POST["submit"])){
 	<?php }
 }
 else{
-	if($conn->query("INSERT INTO `payments` VALUES(0, '$email', '$ids', $amount, '$date', '$trans_id');")){
-		if($conn->query("UPDATE `cart` SET `status`=1 WHERE `user_email`='$email' AND `book_id` IN ($ids);")){
+	$stmt = $conn->prepare("INSERT INTO `payments` (id, email, book_ids, amount, date, transaction_id) VALUES (0, ?, ?, ?, ?, ?)");
+	$stmt->bind_param("ssdss", $email, $ids, $amount, $date, $trans_id);
+	if($stmt->execute()){
+		$stmt2 = $conn->prepare("UPDATE `cart` SET `status`=1 WHERE `user_email`=? AND FIND_IN_SET(book_id, ?)");
+		$stmt2->bind_param("ss", $email, $ids);
+		if($stmt2->execute()){
 			?>
 			<script type="text/javascript">
 				alert("Payment Successful!!");

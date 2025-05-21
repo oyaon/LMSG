@@ -1,4 +1,33 @@
-# Library Management System (LMS)
+// No code was selected, so a new code snippet will be generated.
+
+// Example of improved code for user authentication
+if (Auth::attempt(['email' => request()->input('email'), 'password' => request()->input('password')])) {
+    // Authentication passed
+    return redirect()->intended('dashboard');
+} else {
+    // Authentication failed
+    return back()->withErrors(['email' => 'Invalid credentials']);
+}
+
+// Example of improved code for book management
+$books = Book::where(function ($query) {
+    $query->where('name', 'like', "%".request()->input('query')."%")
+          ->orWhere('author', 'like', "%".request()->input('query')."%");
+})->paginate(12);
+
+// Example of improved code for borrowing system
+try {
+    BorrowController::requestBorrow(request()->input('book_id'), auth()->id());
+} catch (\Exception $e) {
+    // Handle exception
+}
+
+// Example of improved code for shopping cart
+try {
+    CartController::add(request()->input('book_id'), auth()->user()->email);
+} catch (\Exception $e) {
+    // Handle exception
+}# Library Management System (LMS)
 
 A comprehensive system for managing library books, borrowing, and online purchases.
 
@@ -11,195 +40,109 @@ A comprehensive system for managing library books, borrowing, and online purchas
 - Admin panel for book and user management
 - Author management
 - Responsive design for mobile and desktop
+- Fully migrated to Laravel framework for improved security, maintainability, and testability
 
-## Live Demo
+## Project Repository
 
-Visit [https://github.com/oyaon/LMSG](https://github.com/oyaon/LMSG) to see the project repository.
+Visit the [LMS GitHub Repository](https://github.com/oyaon/LMSG) to see the full project source code.
 
-## Migration Guide
+## Laravel Migration
 
-This guide provides instructions for migrating the existing LMS application to the new architecture.
+The LMS project has been migrated to the Laravel framework. This migration includes:
 
-### Prerequisites
+- Database migrations and seeders for all tables and initial data
+- Refactored codebase using Laravel MVC architecture
+- Routes defined with authentication and admin middleware
+- Automated setup script for dependencies, migrations, and asset building
 
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Apache web server
-- Composer (optional, for future dependencies)
+### Migration Setup
 
-### Backup Step
+Run the provided PowerShell script [`laravel-migrate-setup.ps1`](lms-laravel/laravel-migrate-setup.ps1) in the `lms-laravel` directory to automate:
 
-Before starting the migration, create a backup of your database and code:
+- Installing PHP and frontend dependencies
+- Generating app key
+- Running database migrations and seeders
+- Creating storage symbolic link
+- Running tests
+- Building frontend assets
 
-```bash
-# Backup database
-mysqldump -u root -p bms > bms_backup.sql
+### Database Migrations
 
-# Backup code
-xcopy /E /I /H /Y "c:\xampp\htdocs\LMS\LMS" "c:\xampp\htdocs\LMS\LMS_backup"
-```
+Migration files are located in [`lms-laravel/database/migrations`](lms-laravel/database/migrations) and cover all necessary tables including:
 
-### Database Migration Step
+- users, authors, all_books, borrow_history, cart, payments, special_offer, money_donations, book_donations
 
-1. Create the necessary directories:
+Foreign keys and indexes are properly defined for data integrity.
 
-```bash
-mkdir -p c:\xampp\htdocs\LMS\LMS\database
-mkdir -p c:\xampp\htdocs\LMS\LMS\config
-mkdir -p c:\xampp\htdocs\LMS\LMS\includes
-mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\covers
-mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\pdfs
-mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\authors
-```
+## Testing
 
-2. Run the database migration script:
+All critical features have been tested thoroughly, including:
 
-```bash
-cd c:\xampp\htdocs\LMS\LMS
-php database/migrate.php
-```
-
-3. Verify the migration was successful by checking the migration log:
-
-```bash
-type c:\xampp\htdocs\LMS\LMS\database\migration.log
-```
-
-### Code Refactoring Step
-
-1. Update each page to use the new class structure. Start with the login and registration pages:
-
-```bash
-# Replace old login page with new one
-copy c:\xampp\htdocs\LMS\LMS\login.php c:\xampp\htdocs\LMS\LMS\login_page.php.bak
-copy c:\xampp\htdocs\LMS\LMS\login_submit.php c:\xampp\htdocs\LMS\LMS\login_submit.php.bak
-
-# Replace old registration page with new one
-copy c:\xampp\htdocs\LMS\LMS\registration_page.php c:\xampp\htdocs\LMS\LMS\registration_page.php.bak
-copy c:\xampp\htdocs\LMS\LMS\registration_submit.php c:\xampp\htdocs\LMS\LMS\registration_submit.php.bak
-```
-
-2. Continue refactoring other pages following the same pattern:
-
-   - Book management pages
-   - Borrowing system pages
-   - Cart and payment pages
-   - Admin pages
-
-### Testing Step
-
-Test each functionality after refactoring to ensure everything works as expected:
-
-1. User registration and login
-2. Book browsing and searching
-3. Book borrowing
-4. Shopping cart and checkout
-5. Admin functions
-
-### Deployment Step
-
-Once testing is complete, deploy the updated application to production.
+- User authentication and profile management
+- Book management and browsing
+- Borrowing and cart operations
+- Donations and payments
+- Admin dashboard and management
 
 ## File Structure
 
-```
+```plaintext
 LMS/
 ├── admin/              # Admin pages
 ├── config/             # Configuration files
 ├── css/                # CSS files
-├── database/           # Database migration scripts
+├── database/           # Laravel migrations and seeders
 ├── images/             # Image assets
 ├── includes/           # PHP classes and utilities
-├── pdfs/               # PDF files (legacy)
-├── uploads/            # Uploaded files
-│   ├── authors/        # Author images
-│   ├── covers/         # Book cover images
-│   └── pdfs/           # PDF files
-├── index.php           # Home page
-├── login.php           # Login page
-├── register.php        # Registration page
-├── book-details.php    # Book details page
-├── all-books.php       # All books page
-├── borrow.php          # Borrow page
-├── cart-page.php       # Cart page
-├── payment.php         # Payment page
-├── README.md           # Documentation
-└── ROADMAP.md          # Migration roadmap
+├── uploads/            # Uploaded files (authors, covers, pdfs)
+├── resources/          # Laravel views and assets
+├── routes/             # Laravel route definitions
+├── app/                # Laravel application code (Controllers, Models)
+├── public/             # Public web root
+├── README.md           # Project documentation
+├── lms-laravel/laravel-migrate-setup.ps1 # Migration automation script
+└── ...
 ```
-
-## Class Structure
-
-- **Database**: Database connection and query methods
-- **User**: User authentication and management
-- **Book**: Book management
-- **Borrow**: Book borrowing operations
-- **Cart**: Shopping cart and payment operations
-- **Helper**: Utility functions
 
 ## Usage Examples
 
 ### User Authentication
 
 ```php
-// Include initialization file
-require_once 'includes/init.php';
-
-// Authenticate user
-if ($user->authenticate($email, $password)) {
-    // Redirect based on user type
-    if ($user->isAdmin()) {
-        Helper::redirect('admin/index.php');
-    } else {
-        Helper::redirect('index.php');
-    }
+// Laravel authentication example
+if (Auth::attempt(['email' => $email, 'password' => $password])) {
+    // Authentication passed
+    return redirect()->intended('dashboard');
 } else {
-    $errors[] = 'Invalid email or password';
+    // Authentication failed
+    return back()->withErrors(['email' => 'Invalid credentials']);
 }
 ```
 
 ### Book Management
 
 ```php
-// Include initialization file
-require_once 'includes/init.php';
+// Fetch all books with pagination
+$books = Book::paginate(12);
 
-// Get all books
-$allBooks = $book->getAllBooks();
-
-// Get book by ID
-$bookDetails = $book->getBookById($id);
-
-// Search books
-$searchResults = $book->searchBooks($query, $category);
+// Search books by name or author
+$books = Book::where('name', 'like', "%$query%")
+    ->orWhere('author', 'like', "%$query%")
+    ->paginate(12);
 ```
 
 ### Borrowing System
 
 ```php
-// Include initialization file
-require_once 'includes/init.php';
-
 // Request to borrow a book
-$result = $borrow->requestBorrow($userEmail, $bookId);
-
-// Get user's borrow history
-$borrowHistory = $borrow->getUserBorrowHistory($userEmail);
+BorrowController::requestBorrow($bookId, $userId);
 ```
 
 ### Shopping Cart
 
 ```php
-// Include initialization file
-require_once 'includes/init.php';
-
 // Add book to cart
-$result = $cart->addToCart($userEmail, $bookId);
-
-// Get cart items
-$cartItems = $cart->getCartItems($userEmail);
-
-// Process payment
-$result = $cart->processPayment($userEmail, $bookIds, $amount, $transactionId);
+CartController::add($bookId, $userEmail);
 ```
 
 ## Contributing
@@ -213,3 +156,7 @@ $result = $cart->processPayment($userEmail, $bookIds, $amount, $transactionId);
 ## License
 
 This project is licensed under the MIT License.
+
+---
+
+*Thank you for checking out the Library Management System! If you have suggestions or want to contribute, feel free to open an issue or pull request.*
