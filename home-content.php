@@ -1,15 +1,17 @@
-<?php include ("admin/db-connect.php"); ?>
+<?php require_once 'includes/init.php'; ?>
 
 <!-- Special Offers -->
 <div class="container pb-4">
     <h3 class="text-center">Special Offers</h3>
-    <div class="row">
+    <div class="row special-offers-list">
         <?php
         // Prepare the query
         $sql = "SELECT * FROM special_offer";
         
         // Execute the query
-        if ($result = $conn->query($sql)) {
+        $resultStmt = $db->query($sql);
+        if ($resultStmt) {
+            $result = $resultStmt->get_result();
             // Check if there are any rows
             if ($result->num_rows > 0) {
                 // Loop through each row
@@ -39,12 +41,11 @@
             } else {
                 echo "<p>No special offers available at the moment.</p>";
             }
+            $result->free();
+            $resultStmt->close();
         } else {
-            echo "<p>Error fetching special offers: " . $conn->error . "</p>";
+            echo "<p>Error fetching special offers.</p>";
         }
-
-        // Close the result set
-        $result->free();
         ?>
     </div>
 </div>

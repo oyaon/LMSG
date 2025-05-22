@@ -5,12 +5,7 @@
  * This file contains all configuration settings for the LMS application
  */
 
-// Session settings - moved to top to avoid headers already sent warnings
-if (session_status() == PHP_SESSION_NONE) {
-    ini_set('session.cookie_httponly', 1);
-    ini_set('session.use_only_cookies', 1);
-    ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
-}
+// Session settings - removed to avoid duplication and headers already sent warnings
 
 // Environment setting
 define('ENVIRONMENT', 'development'); // Options: 'development', 'production'

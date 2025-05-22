@@ -1,6 +1,6 @@
 <?php
 include("header.php");
-require_once("./admin/db-connect.php");
+require_once 'includes/init.php';
 
 session_start();
 if (!isset($_SESSION["email"])) {
@@ -30,9 +30,14 @@ $orderQuery = "SELECT o.id as order_id, o.date as order_date, ob.book_id, ab.nam
                WHERE o.id = ? AND o.user_email = ?
                GROUP BY ob.book_id, ab.name, ab.price, o.id, o.date";
 
-$stmt = $conn->prepare($orderQuery);
-$stmt->bind_param("is", $order_id, $user_email);
-$stmt->execute();
+$stmt = $db->query($orderQuery, "is", [$order_id, $user_email]);
+if (!$stmt) {
+    echo '<script type="text/javascript">
+        alert("Order not found.");
+        window.location.assign("order_history.php");
+    </script>';
+    exit();
+}
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
@@ -49,6 +54,7 @@ while ($row = $result->fetch_assoc()) {
     $orderDate = $row['order_date'];
     $orderData[] = $row;
 }
+$stmt->close();
 
 $total_price = 0;
 ?>

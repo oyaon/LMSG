@@ -1,7 +1,5 @@
-<?php
-require_once 'header.php';
-include("admin/db-connect.php");
-?>
+<?php require_once "includes/init.php"; ?>
+<?php include ("header.php"); ?>
 
 <!-- Special Offers Section -->
 <section class="special-offers py-5">
@@ -207,6 +205,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php
-require_once 'footer.php';
-?>
+<?php include ("footer.php"); ?>

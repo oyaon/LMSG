@@ -49,7 +49,7 @@ function test_add_cart() {
     }
 
     ob_start();
-    include __DIR__ . '/../add_cart.php';
+    include __DIR__ . '/../cart-add.php';
     $output = ob_get_clean();
 
     if (strpos($output, 'Something went wrong') !== false) {

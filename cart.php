@@ -1,8 +1,7 @@
-<?php include ("header.php"); ?>
+<?php 
+require_once 'includes/init.php';
+include ("header.php"); 
 
-<?php require_once("./admin/db-connect.php"); ?>
-
-<?php
 if (!isset($_SESSION["email"])) {
     echo '<script type="text/javascript">
         alert("Login first!");
@@ -16,19 +15,21 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $perPage = 10;
 
 // Count total items
-$countQuery = "SELECT COUNT(*) as total FROM cart WHERE user_email='$user_email' AND status=0";
-$countResult = $conn->query($countQuery);
+$countQuery = "SELECT COUNT(*) as total FROM cart WHERE user_email=?";
+$countResultStmt = $db->query($countQuery, "s", [$user_email]);
 $total = 0;
-if ($countResult) {
-    $row = $countResult->fetch_assoc();
+if ($countResultStmt) {
+    $result = $countResultStmt->get_result();
+    $row = $result->fetch_assoc();
     $total = (int)$row['total'];
+    $countResultStmt->close();
 }
 $totalPages = ceil($total / $perPage);
 
 // Fetch paginated results
 $offset = ($page - 1) * $perPage;
-$q = "SELECT all_books.id as book_id, all_books.name, all_books.price, all_books.quantity as book_quantity, cart.book_id, cart.id as cart_id, cart.date, cart.user_email, cart.status FROM `all_books` INNER JOIN `cart` ON all_books.id=cart.book_id AND cart.user_email='$user_email' AND cart.status=0 LIMIT $perPage OFFSET $offset";
-$result = $conn->query($q);
+$q = "SELECT all_books.id as book_id, all_books.name, all_books.price, all_books.quantity as book_quantity, cart.book_id, cart.id as cart_id, cart.date, cart.user_email, cart.status FROM `all_books` INNER JOIN `cart` ON all_books.id=cart.book_id AND cart.user_email=? AND cart.status=0 LIMIT ? OFFSET ?";
+$resultStmt = $db->query($q, "sii", [$user_email, $perPage, $offset]);
 
 $total_price = 0;
 $ids = "";
@@ -76,7 +77,8 @@ $ids = "";
 		<tbody>
 			<?php
 			$i = 0;
-			if ($result) {
+			if ($resultStmt) {
+                $result = $resultStmt->get_result();
 				while ($data = $result->fetch_array()) {
 					$ids .= $data['book_id'] . ",";
 			?>
@@ -108,6 +110,7 @@ $ids = "";
 			<?php
 					$total_price += $data["price"];
 				}
+                $resultStmt->close();
 			}
 			?>
 		</tbody>

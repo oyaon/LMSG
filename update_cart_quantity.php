@@ -1,5 +1,5 @@
 <?php
-require_once("./admin/db-connect.php");
+require_once 'includes/init.php';
 
 if (!isset($_SESSION["email"])) {
     echo '<script type="text/javascript">
@@ -23,9 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Fetch the cart item and book info
     $cartQuery = "SELECT book_id FROM cart WHERE id = ? AND user_email = ? AND status = 0";
-    $stmt = $conn->prepare($cartQuery);
-    $stmt->bind_param("is", $cartId, $_SESSION["email"]);
-    $stmt->execute();
+    $stmt = $db->query($cartQuery, "is", [$cartId, $_SESSION["email"]]);
+    if (!$stmt) {
+        echo '<script type="text/javascript">
+            alert("Cart item not found.");
+            window.history.back();
+        </script>';
+        exit();
+    }
     $result = $stmt->get_result();
     if ($result->num_rows === 0) {
         echo '<script type="text/javascript">
@@ -36,15 +41,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $cartItem = $result->fetch_assoc();
     $bookId = $cartItem['book_id'];
+    $stmt->close();
 
     // Fetch current quantity in cart for this book
     $countQuery = "SELECT COUNT(*) as count FROM cart WHERE user_email = ? AND book_id = ? AND status = 0";
-    $stmt = $conn->prepare($countQuery);
-    $stmt->bind_param("si", $_SESSION["email"], $bookId);
-    $stmt->execute();
+    $stmt = $db->query($countQuery, "si", [$_SESSION["email"], $bookId]);
+    if (!$stmt) {
+        echo '<script type="text/javascript">
+            alert("Failed to fetch current quantity.");
+            window.history.back();
+        </script>';
+        exit();
+    }
     $countResult = $stmt->get_result();
     $countRow = $countResult->fetch_assoc();
     $currentQuantity = (int)$countRow['count'];
+    $stmt->close();
 
     if ($quantity == $currentQuantity) {
         // No change needed
@@ -56,11 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check book availability
         $bookQuery = "SELECT quantity FROM all_books WHERE id = ?";
-        $stmt = $conn->prepare($bookQuery);
-        $stmt->bind_param("i", $bookId);
-        $stmt->execute();
+        $stmt = $db->query($bookQuery, "i", [$bookId]);
+        if (!$stmt) {
+            echo '<script type="text/javascript">
+                alert("Failed to check book availability.");
+                window.history.back();
+            </script>';
+            exit();
+        }
         $bookResult = $stmt->get_result();
         $book = $bookResult->fetch_assoc();
+        $stmt->close();
 
         if (!$book || $book['quantity'] < $addCount) {
             echo '<script type="text/javascript">
@@ -71,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Add items to cart and update book quantity
+        $conn = $db->getConnection();
         $conn->begin_transaction();
         try {
             $today = date('Y-m-d');
@@ -79,10 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $insertStmt->bind_param("sis", $_SESSION["email"], $bookId, $today);
                 $insertStmt->execute();
             }
+            $insertStmt->close();
 
             $updateStmt = $conn->prepare("UPDATE all_books SET quantity = quantity - ? WHERE id = ?");
             $updateStmt->bind_param("ii", $addCount, $bookId);
             $updateStmt->execute();
+            $updateStmt->close();
 
             $conn->commit();
             header("Location: cart.php");
@@ -100,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $removeCount = $currentQuantity - $quantity;
 
         // Remove items from cart and update book quantity
+        $conn = $db->getConnection();
         $conn->begin_transaction();
         try {
             // Get cart item ids to remove
@@ -111,6 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             while ($row = $idsResult->fetch_assoc()) {
                 $idsToRemove[] = $row['id'];
             }
+            $selectStmt->close();
+
             if (count($idsToRemove) < $removeCount) {
                 throw new Exception("Not enough items in cart to remove.");
             }
@@ -122,11 +146,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $deleteStmt = $conn->prepare($deleteQuery);
             $deleteStmt->bind_param($types, ...$idsToRemove);
             $deleteStmt->execute();
+            $deleteStmt->close();
 
             // Update book quantity
             $updateStmt = $conn->prepare("UPDATE all_books SET quantity = quantity + ? WHERE id = ?");
             $updateStmt->bind_param("ii", $removeCount, $bookId);
             $updateStmt->execute();
+            $updateStmt->close();
 
             $conn->commit();
             header("Location: cart.php");

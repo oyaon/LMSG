@@ -22,12 +22,16 @@ class BorrowController extends Controller
     /**
      * Display a listing of the user's borrow history.
      */
-    public function index()
+    public function index(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $borrowHistory = BorrowHistory::with('book')
             ->where('user_id', Auth::id())
             ->latest()
-            ->paginate(10);
+            ->paginate($request->input('per_page', 10));
         
         return view('borrow.index', compact('borrowHistory'));
     }
@@ -35,79 +39,16 @@ class BorrowController extends Controller
     /**
      * Request to borrow a book.
      */
-    public function request(Requnamespace App\Http\Controllers;
-    
-    use App\Models\Book;
-    use App\Models\BorrowHistory;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Auth;
-    
-    class BorrowController extends Controller
+    public function request(Request $request, Book $book)
     {
-        /**
-         * Create a new controller instance.
-         *
-         * @return void
-         */
-        public function __construct()
-        {
-            $this->middleware('auth');
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
-    
-        /**
-         * Display a listing of the user's borrow history.
-         */
-        public function index(Request $request)
-        {
-            if (!Auth::check()) {
-                return redirect()->route('login');
-            }
-    
-            $borrowHistory = BorrowHistory::with('book')
-                ->where('user_id', Auth::id())
-                ->latest()
-                ->paginate($request->input('per_page', 10));
-    
-            return view('borrow.index', compact('borrowHistory'));
-        }
-    
-        /**
-         * Request to borrow a book.
-         */
-        public function request(Request $request, Book $book)
-        {
-            if (!Auth::check()) {
-                return redirect()->route('login');
-            }
-    
-            $request->validate([
-                // Add validation rules here
-            ]);
-    
-            // Check if book is available (quantity > 0)
-            if ($book->quantity <= 0) {
-                return back()->with('error', 'This book is not available for borrowing.');
-            }
-    
-            // Check if user already has an active borrow request for this book
-            $existingRequest = BorrowHistory::where('user_id', Auth::id())
-                ->where('book_id', $book->id)
-                ->whereIn('status', ['Requested', 'Issued'])
-                ->first();
-    
-            if ($existingRequest) {
-                return back()->with('info', 'You already have an active borrow request for this book.');
-            }
-    
-            try {
-                // Create borrow request
-                // ...
-            } catch (\Exception $e) {
-                return back()->with('error', 'An error occurred while requesting the book.');
-            }
-        }
-    }est $request, Book $book)
-    {
+
+        $request->validate([
+            // Add validation rules here
+        ]);
+
         // Check if book is available (quantity > 0)
         if ($book->quantity <= 0) {
             return back()->with('error', 'This book is not available for borrowing.');

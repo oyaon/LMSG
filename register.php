@@ -95,8 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $pageTitle = 'Register';
 
 // Include header
-include 'header.php';
-// Removed include 'top-navbar.php' to avoid duplicate navbar since header.php already includes navbar
+include ("header.php");
 ?>
 
 <div class="container py-5">
@@ -170,4 +169,4 @@ include 'header.php';
     </div>
 </div>
 
-<?php include 'footer.php'; ?>
+<?php include ("footer.php"); ?>

@@ -2,11 +2,17 @@
 require_once("db-connect.php");
 
 if(isset($_GET["a"])){
-	extract($_GET);
+	$a = $_GET["a"];
+	$t = isset($_GET["t"]) ? (int)$_GET["t"] : 0;
+	$fine = isset($_GET["fine"]) ? floatval($_GET["fine"]) : 0;
+	$b_id = isset($_GET["b_id"]) ? (int)$_GET["b_id"] : 0;
 
 	if($a == "issue"){
 		$date = date("Y-m-d");
-		$query = $conn->query("UPDATE `borrow_history` SET `status`='Issued', `issue_date`='$date' WHERE `id`=$t ;");
+		$stmt = $conn->prepare("UPDATE `borrow_history` SET `status`='Issued', `issue_date`=? WHERE `id`=?");
+		$stmt->bind_param("si", $date, $t);
+		$query = $stmt->execute();
+		$stmt->close();
 		if($query){ ?>
 			<script type="text/javascript">
 				alert("Issued successfully");
@@ -15,7 +21,10 @@ if(isset($_GET["a"])){
 		<?php }
 	}
 	else if($a == "decline"){
-		$query = $conn->query("UPDATE `borrow_history` SET `status`='Declined' WHERE `id`=$t ;");
+		$stmt = $conn->prepare("UPDATE `borrow_history` SET `status`='Declined' WHERE `id`=?");
+		$stmt->bind_param("i", $t);
+		$query = $stmt->execute();
+		$stmt->close();
 		if($query){ ?>
 			<script type="text/javascript">
 				alert("Declined successfully");
@@ -24,10 +33,16 @@ if(isset($_GET["a"])){
 		<?php }
 	}
 	else if($a == "return"){
-		$query = $conn->query("UPDATE `borrow_history` SET `status`='Returned', `fine`=$fine WHERE `id`=$t ;");
+		$stmt = $conn->prepare("UPDATE `borrow_history` SET `status`='Returned', `fine`=? WHERE `id`=?");
+		$stmt->bind_param("di", $fine, $t);
+		$query = $stmt->execute();
+		$stmt->close();
 		if($query){
-			$query = $conn->query("UPDATE `all_books` SET `quantity`=`quantity`+1 WHERE `id`=$b_id ;");
-			if($query){ ?>
+			$stmt2 = $conn->prepare("UPDATE `all_books` SET `quantity`=`quantity`+1 WHERE `id`=?");
+			$stmt2->bind_param("i", $b_id);
+			$query2 = $stmt2->execute();
+			$stmt2->close();
+			if($query2){ ?>
 				<script type="text/javascript">
 					alert("Status updated successfully");
 					window.history.go(-1);

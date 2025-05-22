@@ -1,8 +1,6 @@
 <?php
 // Include necessary files
 require_once "includes/init.php";
-include "header.php";
-// navbar is already included in header.php, no need to include it again
 
 // Get book ID from URL
 $id = isset($_GET["t"]) ? (int)$_GET["t"] : 0;
@@ -29,6 +27,9 @@ $authorInfo = null;
 if (isset($book['author_id']) && $book['author_id'] > 0) {
     $authorInfo = $author->getAuthorById($book['author_id']);
 }
+
+include "header.php";
+// navbar is already included in header.php, no need to include it again
 
 // Get book cover image
 $coverImage = !empty($book['cover_image']) ? "images/covers/{$book['cover_image']}" : "images/book-placeholder.jpg";

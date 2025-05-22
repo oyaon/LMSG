@@ -108,8 +108,10 @@ class Helper {
         
         // Validate token
         if (hash_equals($storedToken, $token)) {
-            // Remove used token (one-time use)
-            unset($_SESSION['csrf_tokens'][$formName]);
+            // Remove used token (one-time use) only if formName is not 'login_form'
+            if ($formName !== 'login_form') {
+                unset($_SESSION['csrf_tokens'][$formName]);
+            }
             return true;
         }
         

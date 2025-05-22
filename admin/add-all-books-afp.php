@@ -1,7 +1,13 @@
 <?php include ("header.php"); ?>
-<?php include ("db-connect.php"); ?>
 <?php require_once '../includes/init.php'; ?>
 
+<?php
+// Ensure user is admin
+if (!$user->isLoggedIn() || !$user->isAdmin()) {
+    Helper::redirect('../login.php'); // Redirect to login if not admin
+    exit;
+}
+?>
 <div class="container">
 	<h1 class="pt-2">Add Book</h1>
 	
@@ -32,6 +38,7 @@
 	<div class="row">
 		<div class="col-6">
 			<form method="POST" action="add-all-books-asp.php" enctype="multipart/form-data">
+                <?php echo Helper::csrfTokenField('add_book_form'); ?>
 				<div class="mb-3">
 					<label class="form-label">Book Name</label>
 					<input type="text" class="form-control" id="bookname" name="bookname">

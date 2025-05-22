@@ -32,14 +32,17 @@
 
 		<tbody>
 			<?php
-			$q = "SELECT *, borrow_history.id as id, all_books.name FROM `borrow_history` INNER JOIN `all_books` ON borrow_history.book_id=all_books.id ";
+$q = "SELECT *, borrow_history.id as id, all_books.name FROM `borrow_history` INNER JOIN `all_books` ON borrow_history.book_id=all_books.id ";
 
-			if(isset($_GET['t'])){
-				$q .= "WHERE borrow_history.book_id=".$_GET['t'];
-			}
-
-			$q .= ';';
-			$result = $conn->query($q);
+if(isset($_GET['t'])){
+    $bookId = (int)$_GET['t'];
+    $stmt = $conn->prepare($q . " WHERE borrow_history.book_id = ?");
+    $stmt->bind_param("i", $bookId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    $result = $conn->query($q);
+}
 			$i = 0;
 			while ($data = $result->fetch_array()): ?>
 				<tr>

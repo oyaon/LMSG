@@ -2,17 +2,24 @@
 // Include necessary files
 require_once "includes/init.php";
 include "header.php";
-// navbar is already included in header.php, no need to include it again
 
 // Check if there's a flash message
 $flashMessage = '';
 $flashType = '';
 if (isset($_SESSION['flash_message'])) {
-    $flashMessage = $_SESSION['flash_message'];
-    $flashType = $_SESSION['flash_type'] ?? 'info';
+    if (is_array($_SESSION['flash_message'])) {
+        $flashType = $_SESSION['flash_message']['type'] ?? 'info';
+        $flashMessage = $_SESSION['flash_message']['message'] ?? '';
+    } else {
+        $flashMessage = $_SESSION['flash_message'];
+        $flashType = $_SESSION['flash_type'] ?? 'info';
+    }
     unset($_SESSION['flash_message']);
     unset($_SESSION['flash_type']);
 }
+
+// Regenerate CSRF token for login form to avoid token reuse issues
+$csrfToken = Helper::generateCsrfToken('login_form');
 
 // Check if there's a redirect URL
 $redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 'index.php';
@@ -35,9 +42,7 @@ $redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 
                         <input type="hidden" name="redirect" value="<?php echo $redirectUrl; ?>">
                         
                         <!-- CSRF Token -->
-                        <?php if (function_exists('Helper::csrfTokenField')): ?>
-                            <?php echo Helper::csrfTokenField('login_form'); ?>
-                        <?php endif; ?>
+                        <?php echo Helper::csrfTokenField('login_form'); ?>
                         
                         <!-- Email Field -->
                         <?php echo renderFormInput(
@@ -109,5 +114,3 @@ $redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 
         </div>
     </div>
 </div>
-
-<?php include "footer.php"; ?>

@@ -211,6 +211,161 @@ footer {
   color: var(--footer-text-color) !important;
 }
 
+/* Visual Hierarchy & Spacing */
+:root {
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 3rem;
+}
+
+section {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-md);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Accessibility Focus Styles */
+:focus-visible {
+  outline: 3px solid var(--warning-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Loading Skeleton */
+.skeleton {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  min-height: 1em;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    left: -150px;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  body {
+    font-size: 14px;
+  }
+
+  .btn, .nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Interaction Feedback */
+a:hover, a:focus, button:hover, button:focus {
+  color: var(--info-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Consistent Color Scheme & Typography */
+body {
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--dark-color);
+  background-color: var(--light-color);
+}
+
+/* Search & Filter Enhancements */
+.search-highlight {
+  background-color: var(--warning-color);
+  color: var(--dark-color);
+  font-weight: bold;
+}
+
+/* Cart & Checkout Flow */
+.progress-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.progress-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
+.progress-step.active {
+  color: var(--primary-color);
+}
+
+.progress-step::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--secondary-color);
+  transform: translateY(-50%);
+  z-index: -1;
+}
+
+.progress-step:last-child::after {
+  display: none;
+}
+
+/* User Onboarding / Tooltips */
+.tooltip-custom {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+
+.tooltip-custom .tooltip-text {
+  visibility: hidden;
+  width: 160px;
+  background-color: var(--dark-color);
+  color: var(--light-color);
+  text-align: center;
+  border-radius: 6px;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-custom:hover .tooltip-text,
+.tooltip-custom:focus .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Footer Links */
 footer a {
   color: var(--footer-text-color);
 }
@@ -219,4 +374,136 @@ footer a:hover,
 footer a:focus {
   color: var(--warning-color);
   text-decoration: none;
+}
+
+/* Glassmorphism container */
+.glass-container {
+  background: rgba(255,255,255,0.25);
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  backdrop-filter: blur(8px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+/* Floating search bar animation */
+.search-bar-wrapper {
+  position: relative;
+  z-index: 10;
+}
+@media (max-width: 768px) {
+  .search-bar-wrapper form {
+    padding: 0;
+  }
+  .search-bar {
+    padding-left: 2.5rem;
+    font-size: 1rem;
+  }
+  .search-button {
+    min-width: 44px;
+    padding: 0;
+  }
+}
+
+/* Book rating stars */
+.book-rating {
+  display: flex;
+  gap: 0.2em;
+  font-size: 1.3em;
+  margin-top: 0.5em;
+}
+.book-rating .star {
+  cursor: pointer;
+  transition: transform 0.15s, color 0.2s;
+  color: #ccc;
+}
+.book-rating .star[aria-checked="true"],
+.book-rating .star.filled {
+  color: var(--warning-color);
+}
+.book-rating .star.hover-glow {
+  text-shadow: 0 0 8px var(--warning-color);
+  transform: scale(1.2);
+}
+
+/* Donation progress bar */
+.neo-progress {
+  background: var(--light-color);
+  border-radius: 1rem;
+  overflow: hidden;
+  height: 18px;
+}
+.neo-progress .progress-bar {
+  background: var(--primary-color);
+  transition: width 0.7s cubic-bezier(.4,2,.6,1);
+  height: 100%;
+}
+.status-indicator.status-error {
+  color: var(--danger-color);
+}
+.status-indicator.status-success {
+  color: var(--success-color);
+}
+
+/* Author card 3D hover */
+.author-card.book-card-inner {
+  transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.author-card.book-card-inner:hover {
+  transform: rotateY(8deg) scale(1.04);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+}
+.author-photo.border-gradient {
+  border: 4px solid;
+  border-image: linear-gradient(135deg, var(--primary-color), var(--warning-color)) 1;
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  margin: 0 auto 1em auto;
+}
+
+/* Author social links */
+.author-social-links .neo-btn-secondary {
+  margin: 0 0.2em;
+  border-radius: 50%;
+  padding: 0.4em 0.5em;
+  font-size: 1.1em;
+}
+
+/* Special offers empty state */
+.pulse-bg {
+  animation: pulse 1.5s infinite alternate;
+}
+@keyframes pulse {
+  0% { background: rgba(255,255,255,0.25); }
+  100% { background: rgba(255,255,255,0.45); }
+}
+.neo-card .material-icons {
+  color: var(--primary-color);
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Autocomplete dropdown */
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.95);
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  max-height: 220px;
+  overflow-y: auto;
+}
+.autocomplete-item {
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.autocomplete-item:hover {
+  background: var(--warning-color);
+  color: var(--dark-color);
 }

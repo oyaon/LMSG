@@ -4,6 +4,13 @@ require_once __DIR__ . '/includes/Database.php';
 require_once __DIR__ . '/includes/Helper.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // CSRF token validation
+    if (!isset($_POST['csrf_token']) || !Helper::validateCsrfToken($_POST['csrf_token'], 'donate_books_form')) {
+        Helper::setFlashMessage('error', 'Invalid CSRF token. Please refresh the page and try again.');
+        header("Location: donate.php");
+        exit();
+    }
+
     $donor_name = isset($_POST['donor_name']) ? trim($_POST['donor_name']) : '';
     $donor_email = isset($_POST['donor_email']) ? trim($_POST['donor_email']) : '';
     $book_ids = isset($_POST['book_ids']) ? $_POST['book_ids'] : [];

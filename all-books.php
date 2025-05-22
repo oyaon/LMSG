@@ -1,9 +1,7 @@
-<?php
-// Include necessary files
-require_once "includes/init.php";
-include "header.php";
-// Removed include "navbar.php" to avoid duplicate navbar since header.php already includes navbar
+<?php require_once "includes/init.php"; ?>
+<?php include ("header.php"); ?>
 
+<?php
 // Get filter parameters
 $query = isset($_GET['q']) ? trim($_GET['q']) : '';
 $category = isset($_GET['category']) ? trim($_GET['category']) : '';
@@ -105,14 +103,14 @@ $searchFilters = [
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="card h-100 shadow-sm book-card animate__animated animate__fadeInUp">
                         <?php
-                        $coverImage = !empty($book['cover_image']) ? $book['cover_image'] : 'images/books1.png';
+                        $coverImage = !empty($book['cover_image']) ? 'images/' . $book['cover_image'] : 'images/books1.png';
                         ?>
                         <img src="<?php echo htmlspecialchars($coverImage); ?>" class="card-img-top lazyload" alt="<?php echo htmlspecialchars($book['name']); ?>">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title"><?php echo htmlspecialchars($book['name']); ?></h5>
                             <p class="card-text text-muted mb-1"><?php echo htmlspecialchars($book['author']); ?></p>
                             <p class="card-text text-secondary small mb-2"><?php echo htmlspecialchars($book['category']); ?></p>
-                            <a href="book-details.php?id=<?php echo $book['id']; ?>" class="btn btn-primary mt-auto">View Details</a>
+                            <a href="book-details.php?t=<?php echo $book['id']; ?>" class="btn btn-primary mt-auto">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -174,4 +172,4 @@ $searchFilters = [
 }
 </style>
 
-<?php include "footer.php"; ?>
+<?php include ("footer.php"); ?>

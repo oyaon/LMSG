@@ -1,9 +1,7 @@
-<?php
-// Include necessary files
-require_once "includes/init.php";
-include "header.php";
-include "navbar.php";
+<?php require_once "includes/init.php"; ?>
+<?php include ("header.php"); ?>
 
+<?php
 // Check if there's a flash message
 $flashMessage = '';
 $flashType = '';
@@ -173,4 +171,4 @@ if (isset($_SESSION['flash_message'])) {
     </div>
 </div>
 
-<?php include "footer.php"; ?>
+<?php include ("footer.php"); ?>

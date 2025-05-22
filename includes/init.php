@@ -6,13 +6,16 @@
  * Consolidates includes/init.php and includes/init_simple.php
  */
 
-// Start session if not already started
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Load configuration
 require_once __DIR__ . '/../config/config.php';
+
+// Session settings - moved here from config.php to avoid headers already sent warnings
+if (session_status() == PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
+    session_start();
+}
 
 // Load Database class and initialize singleton
 require_once __DIR__ . '/Database.php';

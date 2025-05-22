@@ -7,7 +7,6 @@ if (!$user->isLoggedIn() || !$user->isAdmin()) {
 }
 
 include("header.php");
-include("top-navbar.php");
 
 $bookId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($bookId <= 0) {

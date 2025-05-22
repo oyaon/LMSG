@@ -42,6 +42,7 @@ require_once __DIR__ . '/includes/Helper.php';
         <!-- Donate Money Tab -->
         <div class="tab-pane fade show active" id="money" role="tabpanel" aria-labelledby="money-tab">
             <form action="donate_money.php" method="POST" class="mx-auto" style="max-width: 400px;">
+                <?php echo Helper::csrfTokenField('donate_money_form'); ?>
                 <div class="mb-3">
                     <label for="donor_name_money" class="form-label">Your Name</label>
                     <input type="text" class="form-control" id="donor_name_money" name="donor_name" required>
@@ -66,6 +67,7 @@ require_once __DIR__ . '/includes/Helper.php';
         <!-- Donate Books Tab -->
         <div class="tab-pane fade" id="books" role="tabpanel" aria-labelledby="books-tab">
             <form action="donate_books.php" method="POST" class="mx-auto" style="max-width: 600px;">
+                <?php echo Helper::csrfTokenField('donate_books_form'); ?>
                 <div class="mb-3">
                     <label for="donor_name_books" class="form-label">Your Name</label>
                     <input type="text" class="form-control" id="donor_name_books" name="donor_name" required>
@@ -98,9 +100,9 @@ require_once __DIR__ . '/includes/Helper.php';
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Add dynamic book donation fields
+    // Prepare book options as a JS variable
+    const bookOptions = `<?php foreach ($books as $book): ?><option value="<?php echo htmlspecialchars($book['id']); ?>"><?php echo htmlspecialchars($book['name']); ?></option><?php endforeach; ?>`;
     let bookCount = 1;
     document.getElementById('add-book-btn').addEventListener('click', function() {
         bookCount++;
@@ -111,9 +113,7 @@ require_once __DIR__ . '/includes/Helper.php';
             <div class="col-8">
                 <select class="form-select" name="book_ids[]" required>
                     <option value="" disabled selected>Select a book</option>
-                    <?php foreach ($books as $book): ?>
-                        <option value="<?php echo htmlspecialchars($book['id']); ?>"><?php echo htmlspecialchars($book['name']); ?></option>
-                    <?php endforeach; ?>
+                    ${bookOptions}
                 </select>
             </div>
             <div class="col-4">

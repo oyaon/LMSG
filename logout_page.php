@@ -1,7 +1,10 @@
 <?php
-session_start();
-session_destroy();
-header("location:login_page.php");
-exit();
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+// Redirect to the main logout.php file
+header("Location: logout.php");
+exit();
 ?>

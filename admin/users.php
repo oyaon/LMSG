@@ -1,5 +1,12 @@
 <?php include 'header.php'; ?>
-<?php include 'db-connect.php'; ?>
+<?php require_once '../includes/init.php'; // Use init.php for consistency
+
+// Ensure user is admin
+if (!$user->isLoggedIn() || !$user->isAdmin()) {
+    Helper::redirect('../login.php'); // Redirect to login if not admin
+    exit;
+}
+?>
 
 <div class="container">
     <h1 class="pt-2">All users</h1>
@@ -25,15 +32,21 @@
 
             <div class="d-flex flex-column wrap">
                 <?php
+                $conn = $db->getConnection(); // Get connection from Database class
                 $sql = "SELECT * FROM `users` WHERE `user_type` IN (0,1) ";
+                $params = [];
+                $types = "";
                 if(isset($_GET['s'])){
-                    $s = $_GET['s'];
-                    $sql .= "AND (`first_name` LIKE ('%$s%') OR `last_name` LIKE ('%$s%') OR `email` LIKE ('%$s%')) ";
+                    $searchTerm = "%" . $conn->real_escape_string($_GET['s']) . "%"; // Basic sanitization, but prepared statement is better
+                    $sql .= "AND (`first_name` LIKE ? OR `last_name` LIKE ? OR `email` LIKE ? OR `user_name` LIKE ?) ";
+                    $params = [$searchTerm, $searchTerm, $searchTerm, $searchTerm];
+                    $types = "ssss";
                 }
                 $sql .=";";
 
-                $result = $conn->query($sql);
-                $i = 0;
+                $stmt = $db->query($sql, $types, $params);
+                $result = $stmt->get_result();
+                $i = 0;                
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_array()){
                         ?>
@@ -78,9 +91,12 @@
                                             </div>
 
                                             <div class="d-flex p-4">
-<?php if(!isset($row["entry_fee_stat"]) || !$row["entry_fee_stat"]): ?>
-    <a class="btn btn-success" href="actions.php?a=entry_paid&t=<?php echo $row["email"]; ?>" onclick="return confirm('Mark entry fee as paid for this user?');">Entry paid</a>
-<?php endif; ?>
+                                                <?php if(!isset($row["entry_fee_stat"]) || !$row["entry_fee_stat"]): ?>
+                                                    <form method="POST" action="actions.php?a=entry_paid&t=<?php echo urlencode($row["email"]); ?>" style="display:inline;">
+                                                        <?php echo Helper::csrfTokenField('entry_paid_form_' . $row['id']); ?>
+                                                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Mark entry fee as paid for this user?');">Entry paid</button>
+                                                    </form>
+                                                <?php endif; ?>
 
                                                 <a class="btn btn-primary" href="user_issue_history.php?u=<?php echo $row["email"]; ?>">View book list</a>
                                             </div>
@@ -95,6 +111,7 @@
             } else {
                 echo "<tr><td colspan='5'>No users found</td></tr>";
             }
+            $stmt->close();
             ?>
         </div>
     </div>

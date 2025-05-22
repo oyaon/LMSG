@@ -23,6 +23,8 @@ class User {
         // Initialize user from session if available
         if (isset($_SESSION['user_id'])) {
             $this->loadUserById($_SESSION['user_id']);
+        } elseif (isset($_COOKIE['remember_me_token'])) {
+            $this->loginWithToken($_COOKIE['remember_me_token']);
         }
     }
     
@@ -173,7 +175,9 @@ class User {
         
         if ($user && password_verify($password, $user['password'])) {
             // Regenerate session ID to prevent session fixation
-            session_regenerate_id(true);
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                session_regenerate_id(true);
+            }
 
             // Set user properties
             $this->id = $user['id'];
@@ -341,6 +345,12 @@ class User {
         unset($_SESSION['email']);
         unset($_SESSION['user_type']);
         
+        // Clear remember me token cookie and delete from DB
+        if (isset($_COOKIE['remember_me_token'])) {
+            $this->deleteRememberMeToken($_COOKIE['remember_me_token']);
+            setcookie('remember_me_token', '', time() - 3600, '/', '', isset($_SERVER['HTTPS']), true);
+        }
+        
         // Destroy session
         session_destroy();
 
@@ -446,5 +456,97 @@ class User {
      */
     public function getUserType() {
         return $this->userType;
+    }
+
+    /**
+     * Create a remember me token for the user
+     * 
+     * @param int $userId User ID
+     * @return string|false Token string or false on failure
+     */
+    public function createRememberMeToken($userId) {
+        $token = bin2hex(random_bytes(32));
+        $expiresAt = date('Y-m-d H:i:s', time() + 60 * 60 * 24 * 30); // 30 days
+        
+        $inserted = $this->db->insert(
+            "INSERT INTO user_tokens (user_id, token, expires_at) VALUES (?, ?, ?)",
+            "iss",
+            [$userId, $token, $expiresAt]
+        );
+        
+        if ($inserted) {
+            return $token;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Validate remember me token and log in user
+     * 
+     * @param string $token Token string
+     * @return bool Success status
+     */
+    public function loginWithToken($token) {
+        $now = date('Y-m-d H:i:s');
+        $row = $this->db->fetchOne(
+            "SELECT user_id FROM user_tokens WHERE token = ? AND expires_at > ?",
+            "ss",
+            [$token, $now]
+        );
+        
+        if ($row) {
+            $this->loadUserById($row['user_id']);
+            
+            // Set session variables
+            $_SESSION['user_id'] = $this->id;
+            $_SESSION['email'] = $this->email;
+            $_SESSION['user_type'] = $this->userType;
+            
+            // Regenerate session ID
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                session_regenerate_id(true);
+            }
+            
+            // Refresh token expiration
+            $this->refreshRememberMeToken($token);
+            
+            // Log login via token
+            Helper::logSecurity("User {$this->id} ({$this->email}) logged in via remember me token");
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Refresh remember me token expiration
+     * 
+     * @param string $token Token string
+     * @return bool Success status
+     */
+    public function refreshRememberMeToken($token) {
+        $newExpiresAt = date('Y-m-d H:i:s', time() + 60 * 60 * 24 * 30); // 30 days
+        
+        return $this->db->update(
+            "UPDATE user_tokens SET expires_at = ? WHERE token = ?",
+            "ss",
+            [$newExpiresAt, $token]
+        );
+    }
+    
+    /**
+     * Delete remember me token
+     * 
+     * @param string $token Token string
+     * @return bool Success status
+     */
+    public function deleteRememberMeToken($token) {
+        return $this->db->delete(
+            "DELETE FROM user_tokens WHERE token = ?",
+            "s",
+            [$token]
+        );
     }
 }
