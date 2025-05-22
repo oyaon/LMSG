@@ -1,33 +1,4 @@
-// No code was selected, so a new code snippet will be generated.
-
-// Example of improved code for user authentication
-if (Auth::attempt(['email' => request()->input('email'), 'password' => request()->input('password')])) {
-    // Authentication passed
-    return redirect()->intended('dashboard');
-} else {
-    // Authentication failed
-    return back()->withErrors(['email' => 'Invalid credentials']);
-}
-
-// Example of improved code for book management
-$books = Book::where(function ($query) {
-    $query->where('name', 'like', "%".request()->input('query')."%")
-          ->orWhere('author', 'like', "%".request()->input('query')."%");
-})->paginate(12);
-
-// Example of improved code for borrowing system
-try {
-    BorrowController::requestBorrow(request()->input('book_id'), auth()->id());
-} catch (\Exception $e) {
-    // Handle exception
-}
-
-// Example of improved code for shopping cart
-try {
-    CartController::add(request()->input('book_id'), auth()->user()->email);
-} catch (\Exception $e) {
-    // Handle exception
-}# Library Management System (LMS)
+# Library Management System (LMS)
 
 A comprehensive system for managing library books, borrowing, and online purchases.
 
@@ -40,49 +11,74 @@ A comprehensive system for managing library books, borrowing, and online purchas
 - Admin panel for book and user management
 - Author management
 - Responsive design for mobile and desktop
-- Fully migrated to Laravel framework for improved security, maintainability, and testability
+- Laravel framework integration for improved security, maintainability, and testability
+- Notification system for users
+- Donation management (books and money)
+- Special offers and exclusive content
 
 ## Project Repository
 
 Visit the [LMS GitHub Repository](https://github.com/oyaon/LMSG) to see the full project source code.
 
-## Laravel Migration
+## Setup Instructions (Windows)
 
-The LMS project has been migrated to the Laravel framework. This migration includes:
+1. Clone the repository:
 
-- Database migrations and seeders for all tables and initial data
-- Refactored codebase using Laravel MVC architecture
-- Routes defined with authentication and admin middleware
-- Automated setup script for dependencies, migrations, and asset building
+   ```powershell
+   git clone https://github.com/oyaon/LMSG.git
+   ```
 
-### Migration Setup
+2. Install XAMPP and start Apache/MySQL.
+3. Import the database from `database/` folder using phpMyAdmin.
+4. Copy the project files to your XAMPP `htdocs` directory.
+5. Configure database settings in `config/config.php`.
+6. (Laravel) Navigate to `lms-laravel` and run:
 
-Run the provided PowerShell script [`laravel-migrate-setup.ps1`](lms-laravel/laravel-migrate-setup.ps1) in the `lms-laravel` directory to automate:
+   ```powershell
+   composer install
+   cp .env.example .env
+   php artisan key:generate
+   php artisan migrate --seed
+   php artisan storage:link
+   npm install && npm run build
+   ```
 
-- Installing PHP and frontend dependencies
-- Generating app key
-- Running database migrations and seeders
-- Creating storage symbolic link
-- Running tests
-- Building frontend assets
+7. Access the app at `http://localhost/LMS`.
 
-### Database Migrations
+## Usage Examples
 
-Migration files are located in [`lms-laravel/database/migrations`](lms-laravel/database/migrations) and cover all necessary tables including:
+### User Authentication
 
-- users, authors, all_books, borrow_history, cart, payments, special_offer, money_donations, book_donations
+```php
+if (Auth::attempt(['email' => $email, 'password' => $password])) {
+    // Authentication passed
+    return redirect()->intended('dashboard');
+} else {
+    // Authentication failed
+    return back()->withErrors(['email' => 'Invalid credentials']);
+}
+```
 
-Foreign keys and indexes are properly defined for data integrity.
+### Book Management
 
-## Testing
+```php
+$books = Book::paginate(12);
+$books = Book::where('name', 'like', "%$query%")
+    ->orWhere('author', 'like', "%$query%")
+    ->paginate(12);
+```
 
-All critical features have been tested thoroughly, including:
+### Borrowing System
 
-- User authentication and profile management
-- Book management and browsing
-- Borrowing and cart operations
-- Donations and payments
-- Admin dashboard and management
+```php
+BorrowController::requestBorrow($bookId, $userId);
+```
+
+### Shopping Cart
+
+```php
+CartController::add($bookId, $userEmail);
+```
 
 ## File Structure
 
@@ -104,47 +100,6 @@ LMS/
 └── ...
 ```
 
-## Usage Examples
-
-### User Authentication
-
-```php
-// Laravel authentication example
-if (Auth::attempt(['email' => $email, 'password' => $password])) {
-    // Authentication passed
-    return redirect()->intended('dashboard');
-} else {
-    // Authentication failed
-    return back()->withErrors(['email' => 'Invalid credentials']);
-}
-```
-
-### Book Management
-
-```php
-// Fetch all books with pagination
-$books = Book::paginate(12);
-
-// Search books by name or author
-$books = Book::where('name', 'like', "%$query%")
-    ->orWhere('author', 'like', "%$query%")
-    ->paginate(12);
-```
-
-### Borrowing System
-
-```php
-// Request to borrow a book
-BorrowController::requestBorrow($bookId, $userId);
-```
-
-### Shopping Cart
-
-```php
-// Add book to cart
-CartController::add($bookId, $userEmail);
-```
-
 ## Contributing
 
 1. Fork the repository
@@ -159,4 +114,4 @@ This project is licensed under the MIT License.
 
 ---
 
-*Thank you for checking out the Library Management System! If you have suggestions or want to contribute, feel free to open an issue or pull request.*
+_Last updated: May 23, 2025_
