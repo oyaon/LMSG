@@ -12,20 +12,53 @@
   --dark-color: #343a40;
   --footer-bg-color: #004080; /* Updated footer background color */
   --footer-text-color: #e0e0e0; /* Updated footer text color */
+
+  /* Neutral Colors */
+  --neutral-100: #ffffff;
+  --neutral-200: #f4f4f4;
+  --neutral-300: #e0e0e0;
+  --neutral-400: #cccccc;
+  --neutral-500: #b0b0b0;
+  --neutral-600: #888888;
+  --neutral-700: #555555;
+  --neutral-800: #333333;
+  --neutral-900: #111111;
+
+  /* Accent Colors */
+  --accent-color: #ff5722;
+  --accent-color-light: #ff8a50;
+  --accent-color-dark: #c41c00;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+
+  /* Typography */
+  --base-font-size: 16px;
+  --heading-font: 'Georgia', serif;
+  --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Body Typography */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--body-font);
+  font-size: var(--base-font-size);
   color: var(--dark-color);
   background-color: var(--light-color);
+  margin: 0;
+  padding: 0;
 }
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Georgia', serif;
+  font-family: var(--heading-font);
   font-weight: 600;
   color: var(--primary-color);
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
 /* Navbar Customization */
@@ -116,6 +149,13 @@ a:focus {
 .text-secondary {
   color: var(--secondary-color) !important;
 }
+
+/* Utility spacing classes */
+.spacing-xs { margin: var(--spacing-xs) !important; }
+.spacing-sm { margin: var(--spacing-sm) !important; }
+.spacing-md { margin: var(--spacing-md) !important; }
+.spacing-lg { margin: var(--spacing-lg) !important; }
+.spacing-xl { margin: var(--spacing-xl) !important; }
 
 /* LMS-Specific Customizations */
 

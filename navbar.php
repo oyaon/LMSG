@@ -154,11 +154,14 @@
                                     <form id="logoutForm" action="logout.php" method="POST" class="d-none"></form>
                                 </li>
                                 <!-- Direct logout link as fallback -->
+                                <!-- Removed duplicate logout link to fix duplicate logout buttons issue -->
+                                <!--
                                 <li>
                                     <a href="logout.php" class="dropdown-item text-muted small">
                                         <i class="fas fa-external-link-alt me-1"></i> Direct Logout
                                     </a>
                                 </li>
+                                -->
                             </ul>
                         </li>
                         <!-- Emergency Logout Link (only visible on mobile) -->
@@ -189,8 +192,8 @@
     </nav>
     <!-- Spacer for fixed navbar -->
     <div style="height: 72px;"></div>
-    <!-- Back to Top Button -->
-    <button id="backToTop" aria-label="Back to top" style="display:none;position:fixed;bottom:32px;right:32px;z-index:9999;background:#0a2342;color:#fff;border:none;border-radius:50%;width:44px;height:44px;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-size:1.3rem;align-items:center;justify-content:center;transition:background 0.2s;">
+    <!-- Back to Top Button (styles moved to CSS block) -->
+    <button id="backToTop" aria-label="Back to top" style="display:none;">
         <i class="fas fa-arrow-up"></i>
     </button>
     <!-- Logout Confirmation Modal -->
@@ -355,7 +358,22 @@
         outline: 2px solid #ffc107;
     }
     #backToTop {
-        display: flex;
+        /* display: none; /* Initial display is controlled by inline style on the button element, JS toggles to 'flex' or 'none' */
+        position: fixed;
+        bottom: 32px;
+        right: 32px;
+        z-index: 9999;
+        background: #0a2342;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        font-size: 1.3rem;
+        align-items: center; /* Effective when JS sets display: flex */
+        justify-content: center; /* Effective when JS sets display: flex */
+        transition: background 0.2s;
     }
     #backToTop:focus {
         outline: 2px solid #ffc107;

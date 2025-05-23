@@ -13,53 +13,60 @@
  * @return string HTML for the book card
  */
 function renderBookCard($book, $showActions = true) {
-    $coverImage = !empty($book['cover_image']) ? "images/covers/{$book['cover_image']}" : "images/book-placeholder.jpg";
-    $bookId = $book['id'];
+    // If cover_image is a full path, use as is; if just a filename, prepend images/
+    $coverImage = (strcasecmp($book['name'], 'Whispers For Ruponty') === 0) ? 'images/Whispers.png' : (!empty($book['cover_image']) ? (strpos($book['cover_image'], '/') === false ? 'images/' . htmlspecialchars($book['cover_image']) : htmlspecialchars($book['cover_image'])) : 'images/books1.png');
+    $bookId = htmlspecialchars($book['id']);
     $bookTitle = htmlspecialchars($book['name']);
     $bookAuthor = htmlspecialchars($book['author']);
-    $bookDescription = htmlspecialchars($book['description']);
-    $bookQuantity = (int) $book['quantity'];
-    $bookPrice = number_format($book['price'], 2);
-    
-    $html = <<<HTML
-    <div class="card book-card h-100">
-        <img src="{$coverImage}" class="card-img-top book-cover" alt="{$bookTitle}">
-        <div class="card-body d-flex flex-column">
-            <h5 class="card-title book-title">{$bookTitle}</h5>
-            <p class="card-text book-author">by {$bookAuthor}</p>
-            <p class="card-text book-description">{$bookDescription}</p>
-            <div class="mt-auto">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="badge bg-primary">{$bookPrice} TK</span>
-                    <span class="badge bg-secondary">{$bookQuantity} available</span>
-                </div>
-    HTML;
-    
-    if ($showActions) {
-        $html .= <<<HTML
-                <div class="d-grid gap-2">
-                    <a href="book-details.php?t={$bookId}" class="btn btn-primary">View Details</a>
-        HTML;
-        
-        if ($bookQuantity > 0) {
-            $html .= <<<HTML
-                    <a href="borrow.php?t={$bookId}&q={$bookQuantity}" class="btn btn-outline-primary">Borrow</a>
-            HTML;
-        } else {
-            $html .= <<<HTML
-                    <button class="btn btn-outline-secondary" disabled>Out of Stock</button>
-            HTML;
-        }
-        
-        $html .= "</div>";
+    $bookCategory = htmlspecialchars($book['category']);
+    $bookQuantity = isset($book['quantity']) ? (int)$book['quantity'] : 0;
+    $bookPrice = isset($book['price']) ? number_format($book['price'], 2) : '';
+    $bookDescription = isset($book['description']) ? htmlspecialchars($book['description']) : '';
+
+    // Truncate description to 90 chars, add tooltip for full description
+    $descShort = mb_strlen($bookDescription) > 90 ? mb_substr($bookDescription, 0, 90) . '...' : $bookDescription;
+    $descTooltip = mb_strlen($bookDescription) > 90 ? ' title="' . $bookDescription . '"' : '';
+
+    // Quantity indicator
+    if ($bookQuantity > 5) {
+        $quantityIcon = '<span class="text-success me-1" aria-label="In stock" title="In stock"><i class="fas fa-check-circle"></i></span>';
+    } elseif ($bookQuantity > 0) {
+        $quantityIcon = '<span class="text-warning me-1" aria-label="Limited stock" title="Limited stock"><i class="fas fa-exclamation-triangle"></i></span>';
+    } else {
+        $quantityIcon = '<span class="text-danger me-1" aria-label="Out of stock" title="Out of stock"><i class="fas fa-times-circle"></i></span>';
     }
-    
-    $html .= <<<HTML
-            </div>
-        </div>
-    </div>
-    HTML;
-    
+
+    // Add 'unavailable' class if book is out of stock
+    $cardClass = 'card book-card h-100 shadow-sm animate__animated animate__fadeInUp';
+    if ($bookQuantity <= 0) {
+        $cardClass .= ' unavailable';
+    }
+    $html = '<div class="' . $cardClass . '" tabindex="0" aria-label="Book: ' . $bookTitle . '">';
+    $html .= '<img src="' . $coverImage . '" class="card-img-top book-cover lazyload" alt="' . $bookTitle . ' cover">';
+    $html .= '<div class="card-body d-flex flex-column">';
+    $html .= '<h5 class="card-title book-title">' . $bookTitle . '</h5>';
+    $html .= '<p class="card-text book-author">by ' . $bookAuthor . '</p>';
+    $html .= '<p class="card-text book-category text-secondary small mb-2"><a href="category.php?c=' . urlencode($bookCategory) . '">' . $bookCategory . '</a></p>';
+    $html .= '<p class="card-text book-description"' . $descTooltip . '>' . $descShort . '</p>';
+    $html .= '<div class="d-flex justify-content-between align-items-center mb-2">';
+    $html .= $quantityIcon;
+    $html .= '<span class="badge bg-primary">' . $bookPrice . ' TK</span>';
+    $html .= '<span class="badge bg-secondary">' . $bookQuantity . ' available</span>';
+    $html .= '</div>';
+
+    if ($showActions) {
+        $html .= '<div class="d-grid gap-2">';
+        $html .= '<a href="book-details.php?t=' . $bookId . '" class="btn btn-primary" aria-label="View details for ' . $bookTitle . '" aria-haspopup="true">View Details</a>';
+        if ($bookQuantity > 0) {
+            $html .= '<a href="borrow.php?t=' . $bookId . '&q=' . $bookQuantity . '" class="btn btn-outline-success borrow-btn" aria-label="Borrow ' . $bookTitle . '"><i class="fas fa-book-reader me-1"></i>Borrow</a>';
+        } else {
+            $html .= '<button class="btn btn-outline-secondary" disabled title="This book is currently out of stock" aria-disabled="true">Out of Stock</button>';
+        }
+        $html .= '</div>';
+    }
+
+    $html .= '</div></div>';
+    $html .= '</div>';
     return $html;
 }
 
@@ -485,7 +492,7 @@ function renderTabs($id, $tabs, $activeTab = '') {
     }
     $html .= '</ul>';
     
-    // Tab content
+ // Tab content
     $html .= '<div class="tab-content mt-3">';
     foreach ($tabs as $tab) {
         $tabId = $tab['id'];
@@ -501,4 +508,21 @@ function renderTabs($id, $tabs, $activeTab = '') {
     $html .= '</div>';
     
     return $html;
+}
+
+/**
+ * Get the book cover image
+ * 
+ * @param string $coverImage Cover image filename
+ * @return string Full path to the cover image
+ */
+function getBookCoverImage($coverImage) {
+    $defaultImage = "images/books1.png";
+    $coverImagePath = "images/covers/" . $coverImage;
+
+    if (!empty($coverImage) && file_exists($coverImagePath)) {
+        return $coverImagePath;
+    }
+
+    return $defaultImage;
 }

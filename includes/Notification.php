@@ -42,6 +42,20 @@ class Notification {
     }
 
     /**
+     * Mark all notifications as read for a user
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function markAllAsRead($userId) {
+        return $this->db->update(
+            "UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0",
+            "i",
+            [$userId]
+        );
+    }
+
+    /**
      * Get unread notification count for a user
      *
      * @param int $userId

@@ -97,20 +97,19 @@ $searchFilters = [
     </div>
 
     <!-- Book Listing -->
-    <div id="book-list" class="row g-3">
+    <div id="book-list" class="row row-cols-1 row-cols-md-3 g-4">
         <?php if (count($books) > 0): ?>
             <?php foreach ($books as $book): ?>
-                <div class="col-sm-6 col-md-4 col-lg-3">
-                    <div class="card h-100 shadow-sm book-card animate__animated animate__fadeInUp">
-                        <?php
-                        $coverImage = !empty($book['cover_image']) ? 'images/' . $book['cover_image'] : 'images/books1.png';
-                        ?>
-                        <img src="<?php echo htmlspecialchars($coverImage); ?>" class="card-img-top lazyload" alt="<?php echo htmlspecialchars($book['name']); ?>">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><?php echo htmlspecialchars($book['name']); ?></h5>
-                            <p class="card-text text-muted mb-1"><?php echo htmlspecialchars($book['author']); ?></p>
-                            <p class="card-text text-secondary small mb-2"><?php echo htmlspecialchars($book['category']); ?></p>
-                            <a href="book-details.php?t=<?php echo $book['id']; ?>" class="btn btn-primary mt-auto">View Details</a>
+                <div class="col">
+                    <div class="card h-100 book-card">
+                        <!-- Replace hardcoded image logic with the reusable function -->
+                        <img src="<?php echo getBookCoverImage($book['cover_image']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($book['name'] ?? 'Unknown Book', ENT_QUOTES, 'UTF-8'); ?>">
+                        <div class="card-body">
+                            <h5 class="card-title" data-bs-toggle="tooltip" title="<?php echo $book['name']; ?>">
+                                <?php echo $book['name']; ?>
+                            </h5>
+                            <p class="card-text">By <?php echo $book['author']; ?></p>
+                            <a href="book-details.php?t=<?php echo $book['id']; ?>" class="btn btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -159,6 +158,11 @@ $searchFilters = [
         var lazyLoadInstance = new LazyLoad({
             elements_selector: ".lazyload"
         });
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
     });
 </script>
 
@@ -168,7 +172,7 @@ $searchFilters = [
 }
 .book-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 </style>
 

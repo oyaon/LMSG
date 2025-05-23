@@ -32,7 +32,7 @@ include "header.php";
 // navbar is already included in header.php, no need to include it again
 
 // Get book cover image
-$coverImage = !empty($book['cover_image']) ? "images/covers/{$book['cover_image']}" : "images/book-placeholder.jpg";
+$coverImage = getBookCoverImage($book['cover_image']);
 
 // Create breadcrumb items
 $breadcrumbItems = [

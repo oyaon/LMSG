@@ -1,4 +1,6 @@
-<?php require_once 'includes/init.php'; ?>
+<?php
+require_once 'includes/init.php'; 
+?>
 
 <!-- Index All Books -->
 <div class="container pb-4">
@@ -12,7 +14,7 @@
 			while ($row = $result->fetch_assoc()) { ?>
 				<div class="col-sm-3 mb-3 mb-sm-3">
 					<div class="card">
-						<img src="images/books1.png" class="card-img-top" alt="...">
+						<img src="<?php echo getBookCoverImage($row['cover_image']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?>">
 						<div class="card-body">
 							<h5 class="card-title"><?php echo $row['name']; ?></h5>
 							<p class="card-text">Author: <?php echo $row['author']; ?></p>
@@ -24,7 +26,7 @@
 							<a href="book-details.php?t=<?php echo $row['id']; ?>" class="btn btn-primary">View Details</a>
 						</div>
 					</div>
-				</div>
+                </div>
 			<?php }
 			$stmt->close();
 		}

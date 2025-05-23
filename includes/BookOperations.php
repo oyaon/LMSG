@@ -325,7 +325,7 @@ public function searchBooks($query = '', $category = '', $authorId = '', $sortBy
             
             // Handle file uploads
             $pdfFileName = $this->handleFileUpload('pdf', PDF_FILES_DIR);
-            $coverImage = $this->handleFileUpload('cover_image', BOOK_COVERS_DIR);
+            $coverImage = getBookCoverImage($bookData['cover_image']);
             
             // Prepare book data
             $insertData = [

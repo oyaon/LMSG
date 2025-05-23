@@ -1,21 +1,25 @@
 /* LMS Book Card Component Styles */
 
 .book-card {
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--neutral-300);
   border-radius: 0.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background: white;
+  background: var(--neutral-100);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   max-width: 300px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px var(--neutral-300);
   will-change: transform;
+  margin: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
 }
 
 .book-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 32px var(--neutral-400);
+  cursor: pointer;
+  border-color: var(--primary-color);
 }
 
 .book-cover {
@@ -23,27 +27,29 @@
   height: 200px;
   object-fit: cover;
   border-radius: 0.5rem 0.5rem 0 0;
+  background: var(--neutral-200);
 }
 
 .book-card__content {
-  padding: 1rem;
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  gap: var(--spacing-xs);
 }
 
 .book-card__title {
-  font-family: 'Georgia', serif;
+  font-family: var(--heading-font);
   font-weight: 700;
   font-size: 1.25rem;
   color: var(--primary-color);
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--spacing-xs);
 }
 
 .book-card__author {
   font-size: 1rem;
   color: var(--secondary-color);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-xs);
 }
 
 .availability-dot {
@@ -51,7 +57,8 @@
   height: 12px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 0.5rem;
+  margin-right: var(--spacing-xs);
+  border: 2px solid var(--neutral-200);
 }
 
 .available {
@@ -69,25 +76,75 @@
 .book-card__availability {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--dark-color);
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-xs);
 }
 
 .book-card__actions {
   margin-top: auto;
+  display: flex;
+  gap: var(--spacing-xs);
 }
 
 .book-card__button {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--neutral-100);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 1rem;
 }
 
 .book-card__button:hover {
-  background-color: var(--info-color);
+  background-color: var(--accent-color);
+  color: var(--neutral-100);
+}
+
+.book-description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
+  color: var(--neutral-700);
+  margin-bottom: var(--spacing-xs);
+}
+
+.book-card .fa-check-circle {
+  color: var(--success-color);
+}
+.book-card .fa-exclamation-triangle {
+  color: var(--warning-color);
+}
+.book-card .fa-times-circle {
+  color: var(--danger-color);
+}
+
+.borrow-btn {
+  border-color: var(--success-color);
+  color: var(--success-color);
+  background: transparent;
+  transition: background 0.3s, color 0.3s;
+}
+.borrow-btn:hover, .borrow-btn:focus {
+  background: var(--success-color);
+  color: var(--neutral-100);
+}
+
+/* Unavailable book card background */
+.book-card.unavailable {
+  background: var(--neutral-200);
+  opacity: 0.85;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .book-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px var(--neutral-300);
+    border-color: var(--neutral-300);
+  }
 }

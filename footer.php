@@ -12,21 +12,10 @@
         </ul>
         <div>
             <a href="#" aria-label="Facebook" class="text-light me-3 fs-5"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" aria-label="Twitter" class="text-light me-3 fs-5"><i class="fab fa-twitter"></i></a>
             <a href="#" aria-label="Instagram" class="text-light me-3 fs-5"><i class="fab fa-instagram"></i></a>
-            <a href="#" aria-label="LinkedIn" class="text-light fs-5"><i class="fab fa-linkedin-in"></i></a>
         </div>
-        <button id="back-to-top" class="btn btn-primary btn-sm mt-3 mt-md-0" aria-label="Back to top" title="Back to top">
-            <i class="fas fa-arrow-up"></i>
-        </button>
     </div>
 </footer>
-
-<script>
-document.getElementById('back-to-top').addEventListener('click', function() {
-    window.scrollTo({top: 0, behavior: 'smooth'});
-});
-</script>
 <script>
 // Only load Bootstrap if it's not already loaded
 if (typeof bootstrap === 'undefined') {

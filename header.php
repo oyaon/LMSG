@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Gobindaganj Public Library - Discover a wide range of books and resources" />
     <meta name="keywords" content="library, books, reading, education, literature" />
-    <title>Gobindaganj Public Library</title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - Gobindaganj Public Library' : 'Gobindaganj Public Library'; ?></title>
 
     <!-- Favicon -->
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
@@ -56,61 +56,16 @@
 
 <body class="bg-light text-dark">
     <a href="#main-content" class="visually-hidden-focusable skip-link">Skip to main content</a>
-    <?php include 'navbar.php'; ?>
     <?php
-    // Start session if not already started
-    // Removed session_start() here to avoid headers already sent warning
-    // if (session_status() === PHP_SESSION_NONE) {
-    //     session_start();
-    // }
+    require_once __DIR__ . '/includes/init.php';
+    include 'navbar.php';
 
-    require_once __DIR__ . '/includes/Database.php';
-    $db = Database::getInstance();
-    $conn = $db->getConnection();
-
-    // Include components file
-    require_once __DIR__ . '/includes/components.php';
-    ?>
-
-    <?php
-    require_once __DIR__ . '/includes/Helper.php';
+    // The init.php script (included by pages like index.php, contact.php, etc., before this header.php)
+    // is responsible for loading all necessary core files such as Helper.php, Database.php, components.php.
+    // It also handles starting the session.
+    // Therefore, direct require_once calls for those files are not needed here.
     Helper::displayFlashMessage();
     ?>
-
-    <!-- Main Content Section -->    <main id="main-content" class="container mt-5 pt-5">
-        <h1 class="text-center mb-3">Welcome to Gobindaganj Public Library</h1>
-        <p class="text-center mb-4">Discover a wide range of books, enjoy special offers, and browse our bestsellers!</p>
-
-        <!-- Special Offers Section -->
-        <section class="container pb-4" aria-label="Special Offers">
-            <h3 class="text-center mb-4">Special Offers</h3>
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-                <?php
-                $specialOffers = $db->fetchAll("SELECT * FROM special_offer");
-                foreach ($specialOffers as $row) { ?>
-                    <article class="col">
-                        <div class="card h-100 shadow-sm animate__animated animate__fadeIn">
-                            <div class="row g-0">
-                                <div class="col-md-5 d-flex align-items-center">
-                                    <div class="card-body">
-                                        <p class="card-text fs-5"><?php echo htmlspecialchars($row['header_top']); ?></p>
-                                        <h5 class="card-title fs-4"><?php echo htmlspecialchars($row['header']); ?></h5>
-                                        <p class="card-text fs-6"><?php echo htmlspecialchars($row['header_bottom']); ?></p>
-                                        <a href="all-books.php" class="btn btn-primary" role="button"
-                                            aria-label="Browse all books">Browse Now</a>
-                                    </div>
-                                </div>
-                <div class="col-md-7">
-                    <img src="images/home-content.png" class="img-fluid rounded-end" alt="Special Offer Image"
-                        loading="lazy">
-                </div>
-            </div>
-        </div>
-    </article>
-<?php } ?>
-            </div>
-        </section>
-    </main>
 
 </body>
 </html>

@@ -1,5 +1,4 @@
 <?php include 'header.php'; ?>
-<?php include 'db-connect.php'; ?>
 <?php require_once '../includes/init.php'; ?>
 
 <div class="col-9">
@@ -41,11 +40,11 @@
                     $id = (int)$_GET["edit-id"];
                     
                     // Use prepared statement to get book data
-                    $stmt = $conn->prepare("SELECT * FROM all_books WHERE id = ?");
-                    $stmt->bind_param("i", $id);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    
+                    $book = $bookOps->getBookById($id);
+
+                    // For compatibility with the existing form structure, let's convert the result to an associative array if it's an object
+                    $row = is_object($book) ? (array)$book : $book;
+
                     if ($result->num_rows === 0) {
                         throw new Exception("Book not found with ID: $id");
                     }
@@ -63,6 +62,7 @@
                 ?>
 
                 <form action="add-all-books-up.php" method="POST" enctype="multipart/form-data">
+                    <?php echo Helper::csrfTokenField('edit_book_form'); ?>
                     <div class="mb-3">
                         <input type="hidden" class="form-control" name='id' value="<?php echo $row['id']; ?>">
                         <label for="bookname" class="form-label">Book Name</label>
@@ -89,8 +89,28 @@
                         <input type="number" class="form-control" id="bookprice" name="bookprice" value="<?php echo $row['price']; ?>" min="1">
                     </div>
                     <div class="mb-3">
+                        <label for="isbn" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" id="isbn" name="isbn" value="<?php echo htmlspecialchars($row['isbn'] ?? ''); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="page_count" class="form-label">Page Count</label>
+                        <input type="number" class="form-control" id="page_count" name="page_count" min="1" value="<?php echo htmlspecialchars($row['page_count'] ?? ''); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="published_date" class="form-label">Published Date</label>
+                        <input type="date" class="form-control" id="published_date" name="published_date" value="<?php echo htmlspecialchars($row['published_date'] ?? ''); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="format" class="form-label">Format</label>
+                        <input type="text" class="form-control" id="format" name="format" value="<?php echo htmlspecialchars($row['format'] ?? ''); ?>">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label" for="pdf">Book pdf</label>
                         <input type="file" name="pdf" id="pdf" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cover_image" class="form-label">Book Cover Image (leave blank to keep current)</label>
+                        <input type="file" name="cover_image" id="cover_image" class="form-control" accept="image/*">
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update</button>
