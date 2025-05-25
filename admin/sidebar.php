@@ -6,6 +6,7 @@
 				<a href="add-all-books.php" class="list-group-item list-group-item-action list-group-item-light">All Books</a>
 				<a href="add-all-authors.php" class="list-group-item list-group-item-action list-group-item-light">All Authors</a>
 				<a href="history.php" class="list-group-item list-group-item-action list-group-item-light">Issue history</a>
+				<a href="orders.php" class="list-group-item list-group-item-action list-group-item-light">Payment Orders</a>
 				<a href="donation_list.php" class="list-group-item list-group-item-action list-group-item-light">Donation list</a>
 				<a href="users.php" class="list-group-item list-group-item-action list-group-item-light">Users</a>
 				<a href="entry_and_fines.php" class="list-group-item list-group-item-action list-group-item-light">Entry and fines</a>

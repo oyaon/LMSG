@@ -128,6 +128,23 @@ class BookOperations {
     public function getBooksByAuthor($authorId, $limit = 0, $offset = 0) {
         return $this->getAllBooks(['author_id' => $authorId], 'id', 'DESC', $limit, $offset);
     }
+
+    /**
+     * Get count of books by author
+     * 
+     * @param int $authorId Author ID
+     * @return int Count of books
+     */
+    public function getBooksCountByAuthor($authorId) {
+        try {
+            $sql = "SELECT COUNT(*) as count FROM all_books WHERE author_id = ?";
+            $result = $this->dbOps->executeQuery($sql, 'i', [$authorId], false);
+            return $result ? (int)$result['count'] : 0;
+        } catch (Exception $e) {
+            Helper::logError("Error fetching books count: " . $e->getMessage(), __FILE__, __LINE__);
+            return 0;
+        }
+    }
     
     /**
      * Search books with advanced filtering and sorting

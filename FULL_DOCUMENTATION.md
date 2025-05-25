@@ -30,34 +30,34 @@ The Library Management System (LMS) is a comprehensive system for managing libra
 
 1. Backup your database and code:
 
-```bash
-mysqldump -u root -p bms > bms_backup.sql
-xcopy /E /I /H /Y "c:\xampp\htdocs\LMS\LMS" "c:\xampp\htdocs\LMS\LMS_backup"
-```
+   ```bash
+   mysqldump -u root -p bms > bms_backup.sql
+   xcopy /E /I /H /Y "c:\xampp\htdocs\LMS\LMS" "c:\xampp\htdocs\LMS\LMS_backup"
+   ```
 
 2. Create necessary directories:
 
-```bash
-mkdir -p c:\xampp\htdocs\LMS\LMS\database
-mkdir -p c:\xampp\htdocs\LMS\LMS\config
-mkdir -p c:\xampp\htdocs\LMS\LMS\includes
-mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\covers
-mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\pdfs
-mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\authors
-```
+   ```bash
+   mkdir -p c:\xampp\htdocs\LMS\LMS\database
+   mkdir -p c:\xampp\htdocs\LMS\LMS\config
+   mkdir -p c:\xampp\htdocs\LMS\LMS\includes
+   mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\covers
+   mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\pdfs
+   mkdir -p c:\xampp\htdocs\LMS\LMS\uploads\authors
+   ```
 
 3. Run the database migration script:
 
-```bash
-cd c:\xampp\htdocs\LMS\LMS
-php database/migrate.php
-```
+   ```bash
+   cd c:\xampp\htdocs\LMS\LMS
+   php database/migrate.php
+   ```
 
 4. Verify migration success by checking the migration log:
 
-```bash
-type c:\xampp\htdocs\LMS\LMS\database\migration.log
-```
+   ```bash
+   type c:\xampp\htdocs\LMS\LMS\database\migration.log
+   ```
 
 5. Update pages to use the new class structure (login, registration, book management, borrowing, cart, payment, admin).
 
@@ -69,172 +69,125 @@ type c:\xampp\htdocs\LMS\LMS\database\migration.log
 
 1. Clone the Laravel repository:
 
-```bash
-git clone https://github.com/yourusername/laravel-lms.git
-cd laravel-lms
-```
+   ```bash
+   git clone https://github.com/yourusername/laravel-lms.git
+   cd laravel-lms
+   ```
 
 2. Install PHP dependencies:
 
-```bash
-composer install
-```
+   ```bash
+   composer install
+   ```
 
 3. Install frontend dependencies:
 
-```bash
-npm install
-npm run dev
-```
+   ```bash
+   npm install
+   npm run dev
+   ```
 
 4. Copy `.env.example` to `.env` and configure database settings.
 
-```bash
-cp .env.example .env
-```
+   ```bash
+   cp .env.example .env
+   ```
 
 5. Generate application key:
 
-```bash
-php artisan key:generate
-```
+   ```bash
+   php artisan key:generate
+   ```
 
 6. Run migrations:
 
-```bash
-php artisan migrate
-```
+   ```bash
+   php artisan migrate
+   ```
 
 7. Seed database (optional):
 
-```bash
-php artisan db:seed
-```
+   ```bash
+   php artisan db:seed
+   ```
 
 8. Create symbolic link for storage:
 
-```bash
-php artisan storage:link
-```
+   ```bash
+   php artisan storage:link
+   ```
 
 9. Start development server:
 
-```bash
-php artisan serve
-```
+   ```bash
+   php artisan serve
+   ```
 
-## 3. Usage Instructions and User Roles
+## 3. Database Schema and Relationships
 
-### User Roles
+### Tables
 
-- **Regular User**: Browse books, borrow books, make purchases.
-- **Admin**: Manage books, authors, borrow requests, users.
+1. **Users**:
+   - Stores user information with hashed passwords and user types (Admin or Regular User).
+   - Columns: `id`, `first_name`, `last_name`, `user_name`, `email`, `password`, `user_type`, `created_at`, `updated_at`.
 
-### Default Admin Account (Laravel Migration)
+2. **Authors**:
+   - Contains author details, including optional biography and image.
+   - Columns: `id`, `name`, `biography`, `image`, `created_at`, `updated_at`.
 
-- Email: admin@example.com
-- Password: password
+3. **Books**:
+   - Includes book details, linking to authors via `author_id`.
+   - Columns: `id`, `name`, `author_id`, `author`, `category`, `description`, `quantity`, `price`, `pdf`, `cover_image`, `created_at`, `updated_at`.
 
-### Usage Examples
+4. **Borrow History**:
+   - Tracks borrowing records with statuses like "Requested", "Issued", "Returned", and "Declined".
+   - Columns: `id`, `user_email`, `book_id`, `issue_date`, `fine`, `status`.
 
-Refer to the README.md for PHP code examples on user authentication, book management, borrowing system, and shopping cart.
+5. **Cart**:
+   - Manages books in user carts, with a status indicating purchase.
+   - Columns: `id`, `user_id`, `book_id`, `quantity`, `status`.
 
-## 4. Architecture and Class Structure Overview
-
-### File Structure
-
-```
-LMS/
-├── admin/              # Admin pages
-├── config/             # Configuration files
-├── css/                # CSS files
-├── database/           # Database migration scripts
-├── images/             # Image assets
-├── includes/           # PHP classes and utilities
-├── pdfs/               # PDF files (legacy)
-├── uploads/            # Uploaded files
-│   ├── authors/        # Author images
-│   ├── covers/         # Book cover images
-│   └── pdfs/           # PDF files
-├── index.php           # Home page
-├── login.php           # Login page
-├── register.php        # Registration page
-├── book-details.php    # Book details page
-├── all-books.php       # All books page
-├── borrow.php          # Borrow page
-├── cart-page.php       # Cart page
-├── payment.php         # Payment page
-├── README.md           # Documentation
-└── ROADMAP.md          # Migration roadmap
-```
-
-### Class Structure
-
-- **Database**: Database connection and query methods
-- **User**: User authentication and management
-- **Book**: Book management
-- **Borrow**: Book borrowing operations
-- **Cart**: Shopping cart and payment operations
-- **Helper**: Utility functions
-
-## 5. Database Schema and Relationships
-
-Refer to `docs/database-structure.md` for detailed table schemas, indexes, relationships, backup and restore functionality, migration scripts, and security considerations.
-
-### Key Tables
-
-- `users`
-- `authors`
-- `all_books`
-- `borrow_history`
-- `cart`
-- `payments`
+6. **Payments**:
+   - Records payment details, including book IDs and transaction status.
+   - Columns: `id`, `user_id`, `amount`, `transaction_id`, `status`, `created_at`.
 
 ### Relationships
 
-- `all_books.author_id` → `authors.id`
-- `borrow_history.book_id` → `all_books.id`
-- `cart.book_id` → `all_books.id`
+- `author_id` in `all_books` references `authors`.
+- `book_id` in `borrow_history` and `cart` references `all_books`.
+- Foreign keys ensure data integrity and support cascading updates/deletes.
 
-## 6. Migration and Backup Procedures
+## 4. Refactored Code and Security Enhancements
 
-- Use `database/migrate.php` to create or update the database schema.
-- Backup and restore using `includes/DatabaseBackup.php` and admin interface `admin/database-backup.php`.
-- Backups stored in `database/backups` directory.
+### Refactored Files
 
-## 7. Security Considerations
+1. **actions.php**:
+   - Replaced raw SQL queries with prepared statements to prevent SQL injection.
+   - Improved readability with a `switch-case` structure.
 
-- Passwords hashed using PHP's `password_hash()`.
-- Database credentials stored in `config/config.php`.
-- Input validation and sanitization before queries.
-- Prepared statements used to prevent SQL injection.
-- CSRF protection and role-based access control implemented.
-- Secure file uploads and session security enhanced.
-- Rate limiting for login attempts.
+### Security Enhancements
 
-## 8. Existing Documentation References and How to Use Them
+- Implemented CSRF tokens in forms (e.g., `register.html`).
+- Used prepared statements in `migrate.php` and `actions.php` for secure database interactions.
+- Validated and sanitized user inputs across the application.
 
-- `README.md`: Project overview and basic usage.
-- `docs/implementation-progress.md`: Development phases and progress.
-- `docs/database-structure.md`: Database schema details.
-- `docs/laravel-migration-README.md`: Laravel migration guide.
-- Other docs in `docs/` directory cover Laravel components, API, controllers, middleware, migrations, models, policies, providers, repositories, requests, routes, seeders, views, and more.
+## 5. Testing and Validation
 
-## 9. Future Improvements and Roadmap
+### Test Cases
 
-Refer to `docs/implementation-progress.md` and `ROADMAP.md` for planned features and improvements including:
+- Found in `tests/` and `lms-laravel/tests/`.
+- Includes PHPUnit and Laravel Pest tests for user authentication, book management, and borrowing.
 
-- Frontend improvements and UI enhancements
-- Advanced search functionality
-- User profile management
-- Email notifications
-- Book ratings and reviews
-- Reporting system
-- Admin dashboard enhancements
-- Testing and deployment plans
-- Documentation and training sessions
-- Consider adding diagrams for database schema and architecture (ERD, class diagrams)
-- Add CI/CD and Docker information if applicable in the future roadmap
+### Instructions
+
+- Detailed in `testing_instructions.md`.
+- Execute tests to validate functionality and identify gaps.
+
+## 6. Future Improvements
+
+- Refactor other files to follow best practices for maintainability.
+- Enhance UI responsiveness and accessibility.
+- Conduct a thorough security audit to identify and fix vulnerabilities.
 
 ---
 

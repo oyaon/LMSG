@@ -40,16 +40,16 @@
                     $id = (int)$_GET["edit-id"];
                     
                     // Use prepared statement to get book data
-                    $book = $bookOps->getBookById($id);
+                    $row = $bookOps->getBookById($id);
 
                     // For compatibility with the existing form structure, let's convert the result to an associative array if it's an object
-                    $row = is_object($book) ? (array)$book : $book;
+                    if (is_object($row)) {
+                        $row = (array)$row;
+                    }
 
-                    if ($result->num_rows === 0) {
+                    if (!$row) {
                         throw new Exception("Book not found with ID: $id");
                     }
-                    
-                    $row = $result->fetch_assoc();
                 } catch (Exception $e) {
                     // Log the error
                     Helper::logError("Error fetching book: " . $e->getMessage(), __FILE__, __LINE__);

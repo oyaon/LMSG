@@ -25,6 +25,7 @@
     $unreadCount = 0;
     $recentNotifications = [];
     $profileImage = 'images/avatar.png';
+    $cartCount = 0;
     if ($user->isLoggedIn()) {
         $unreadCount = $notification->getUnreadCount($user->getId());
         $recentNotifications = $notification->getUserNotifications($user->getId(), 5);
@@ -32,6 +33,15 @@
         $userData = $db->fetchOne("SELECT profile_image FROM users WHERE id = ?", "i", [$user->getId()]);
         if ($userData && !empty($userData['profile_image'])) {
             $profileImage = 'uploads/profile_images/' . $userData['profile_image'];
+        }
+        
+        // Get cart count
+        $userEmail = $_SESSION["email"] ?? '';
+        if (!empty($userEmail)) {
+            $cartResult = $db->fetchOne("SELECT COUNT(*) as count FROM cart WHERE user_email = ? AND status = 0", "s", [$userEmail]);
+            if ($cartResult) {
+                $cartCount = $cartResult['count'];
+            }
         }
     }
     ?>
@@ -141,7 +151,23 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown" role="menu">
                                 <li><a class="dropdown-item" href="user_profile.php" role="menuitem"><i class="fas fa-user me-2"></i> Profile</a></li>
                                 <li><a class="dropdown-item" href="notifications.php" role="menuitem"><i class="fas fa-bell me-2"></i> Notifications</a></li>
+                                
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="text-center text-primary small fw-bold" style="letter-spacing:0.5px;">Shopping</li>
+                                
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center" href="cart.php" role="menuitem">
+                                        <span><i class="fas fa-shopping-cart me-2"></i> Shopping Cart</span>
+                                        <?php if ($cartCount > 0): ?>
+                                        <span class="badge rounded-pill bg-danger"><?php echo $cartCount; ?></span>
+                                        <?php endif; ?>
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item" href="order_history.php" role="menuitem"><i class="fas fa-receipt me-2"></i> Order History</a></li>
+                                
                                 <?php if ($isAdmin): ?>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="text-center text-warning small fw-bold" style="letter-spacing:0.5px;">Admin</li>
                                 <li><a class="dropdown-item" href="admin/index.php" role="menuitem"><i class="fas fa-cog me-2"></i> Admin Dashboard</a></li>
                                 <?php endif; ?>
                                 <li><hr class="dropdown-divider"></li>

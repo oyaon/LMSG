@@ -293,4 +293,38 @@ class Borrow {
         $overdueDays = $daysElapsed - $gracePeriod;
         return $overdueDays * $finePerDay;
     }
+    
+    /**
+     * Check if there are active borrow records for a user
+     *
+     * @param string $userEmail User email
+     * @return bool True if active, false otherwise
+     */
+    public function isActive($userEmail = null) {
+        if ($userEmail === null) {
+            return false; // Default to inactive if no email is provided
+        }
+
+        $activeLoans = $this->db->fetchAll(
+            "SELECT * FROM borrow_history WHERE user_email = ? AND status != 'Returned'",
+            "s",
+            [$userEmail]
+        );
+        return count($activeLoans) > 0;
+    }
+
+    /**
+     * Load borrow details by ID
+     *
+     * @param int $borrowId Borrow ID
+     * @return array|false Borrow details or false if not found
+     */
+    public function loadBorrowById($borrowId) {
+        $borrow = $this->db->fetchOne(
+            "SELECT * FROM borrow_history WHERE id = ?",
+            "i",
+            [$borrowId]
+        );
+        return $borrow ?: false; // Explicitly return false if no record is found
+    }
 }

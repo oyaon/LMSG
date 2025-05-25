@@ -182,7 +182,7 @@ class Book {
         return $this->db->insert(
             "INSERT INTO all_books (name, author_id, author, category, description, quantity, price, pdf, cover_image) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            "iissidss",
+            "sisssidss",
             [
                 $bookData['name'],
                 $authorId,
@@ -273,7 +273,7 @@ class Book {
              pdf = ?, 
              cover_image = ? 
              WHERE id = ?",
-            "sissidiisi",
+            "ssisisdssi",
             [
                 $bookData['name'],
                 $authorId,
@@ -360,5 +360,20 @@ class Book {
         }
         
         return false;
+    }
+
+    /**
+     * Get count of books by author
+     * 
+     * @param int $authorId Author ID
+     * @return int Count of books
+     */
+    public function getBooksCountByAuthor($authorId) {
+        $result = $this->db->fetchOne(
+            "SELECT COUNT(*) as count FROM all_books WHERE author_id = ?",
+            "i",
+            [$authorId]
+        );
+        return $result ? (int)$result['count'] : 0;
     }
 }

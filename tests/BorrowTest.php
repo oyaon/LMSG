@@ -56,4 +56,30 @@ class BorrowTest extends TestCase
         $result = $this->borrow->returnBook($borrowId, $bookId, $fineAmount);
         $this->assertIsBool($result, "returnBook should return a boolean");
     }
+
+    public function testRequestBorrowLimitExceeded()
+    {
+        $userEmail = "testuser@example.com";
+
+        // Simulate 3 active loans
+        $this->borrow->db->insert("INSERT INTO borrow_history (user_email, book_id, status) VALUES (?, ?, 'Borrowed')", "si", [$userEmail, 1]);
+        $this->borrow->db->insert("INSERT INTO borrow_history (user_email, book_id, status) VALUES (?, ?, 'Borrowed')", "si", [$userEmail, 2]);
+        $this->borrow->db->insert("INSERT INTO borrow_history (user_email, book_id, status) VALUES (?, ?, 'Borrowed')", "si", [$userEmail, 3]);
+
+        // Attempt to borrow a 4th book
+        $result = $this->borrow->requestBorrow($userEmail, 4);
+
+        $this->assertEquals("You cannot borrow more than 3 books at a time.", $result);
+    }
+
+    public function testReturnBookUpdatesStatus()
+    {
+        $borrowId = 1;
+        $bookId = 1;
+
+        // Simulate returning a book
+        $result = $this->borrow->returnBook($borrowId, $bookId);
+
+        $this->assertTrue($result, "Returning a book should succeed");
+    }
 }

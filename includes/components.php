@@ -14,7 +14,7 @@
  */
 function renderBookCard($book, $showActions = true) {
     // If cover_image is a full path, use as is; if just a filename, prepend images/
-    $coverImage = (strcasecmp($book['name'], 'Whispers For Ruponty') === 0) ? 'images/Whispers.png' : (!empty($book['cover_image']) ? (strpos($book['cover_image'], '/') === false ? 'images/' . htmlspecialchars($book['cover_image']) : htmlspecialchars($book['cover_image'])) : 'images/books1.png');
+    $coverImage = (strcasecmp($book['name'], 'Whispers For Ruponty') === 0) ? 'images/Whispers.png' : (!empty($book['cover_image']) ? (strpos($book['cover_image'], '/') === false ? 'images/covers/' . htmlspecialchars($book['cover_image']) : htmlspecialchars($book['cover_image'])) : 'images/books1.png');
     $bookId = htmlspecialchars($book['id']);
     $bookTitle = htmlspecialchars($book['name']);
     $bookAuthor = htmlspecialchars($book['author']);

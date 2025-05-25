@@ -1,0 +1,12 @@
+<h2>Payments Table Structure:</h2>
+<table border='1'>
+<tr><th>Field</th><th>Type</th><th>Null</th><th>Key</th><th>Default</th><th>Extra</th></tr>
+<tr><td>id</td><td>int(11)</td><td>NO</td><td>PRI</td><td></td><td>auto_increment</td></tr>
+<tr><td>user_email</td><td>varchar(100)</td><td>NO</td><td>MUL</td><td></td><td></td></tr>
+<tr><td>book_ids</td><td>varchar(255)</td><td>NO</td><td></td><td></td><td></td></tr>
+<tr><td>amount</td><td>decimal(10,2)</td><td>NO</td><td></td><td></td><td></td></tr>
+<tr><td>payment_date</td><td>date</td><td>NO</td><td></td><td></td><td></td></tr>
+<tr><td>transaction_id</td><td>varchar(100)</td><td>YES</td><td></td><td></td><td></td></tr>
+<tr><td>payment_status</td><td>enum('Pending','Completed','Failed')</td><td>NO</td><td></td><td>Completed</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NO</td><td></td><td>current_timestamp()</td><td></td></tr>
+</table>

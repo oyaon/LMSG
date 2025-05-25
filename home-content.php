@@ -2,8 +2,14 @@
 
 <!-- Hero Section: Mobile-friendly & Accessible -->
 <div class="container-fluid px-0 mb-4">
-  <section class="hero-section position-relative d-flex align-items-center justify-content-center text-center text-white" aria-label="Library welcome banner" style="min-height: 320px; background: linear-gradient(rgba(10,35,66,0.7),rgba(10,35,66,0.7)), url('images/library-hero.jpg') center/cover no-repeat;">
-    <div class="p-4 w-100" style="max-width: 700px;"> <h1 class="display-5 fw-bold mb-3" style="color: var(--primary-color); text-shadow: 0 2px 8px rgba(0,0,0,0.25);">Welcome to Public Library Gobindaganj</h1>
+  <section class="hero-section position-relative d-flex align-items-center justify-content-center text-center text-white" aria-label="Library welcome banner" style="min-height: 320px; background: linear-gradient(rgba(20,50,80,0.8),rgba(20,50,80,0.8)), url('images/library-interior.jpg') center/cover no-repeat; animation: fadeIn 2s ease-in-out;">
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+    <div class="p-4 w-100" style="max-width: 700px;"> <h1 class="display-5 fw-bold mb-3" style="color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.25);">Welcome to Public Library Gobindaganj</h1>
       <p class="lead mb-4" style="color: var(--light-color); text-shadow: 0 1px 4px rgba(0,0,0,0.18);">Discover a wide range of books, enjoy special offers, and browse our bestsellers!</p>
       <a href="all-books.php" class="btn btn-lg btn-primary shadow" aria-label="Browse all books">Browse Books</a>
     </div>

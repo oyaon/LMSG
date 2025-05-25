@@ -2,6 +2,15 @@
 
 A comprehensive system for managing library books, borrowing, and online purchases.
 
+## Table of Contents
+
+- [Features](#features)
+- [Project Repository](#project-repository)
+- [Setup Instructions (Windows)](#setup-instructions-windows)
+- [Usage Examples](#usage-examples)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
 - User registration and authentication
@@ -102,16 +111,18 @@ LMS/
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin feature-name`
-5. Submit a pull request
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes with clear and concise messages.
+4. Push your branch to your forked repository.
+5. Submit a pull request to the main repository.
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
----
+## Last Updated
 
-_Last updated: May 23, 2025_
+May 23, 2025

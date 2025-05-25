@@ -32,8 +32,8 @@ if(isset($_GET['t'])){
 			}
 
 			// Insert with explicit columns and matching values
-			$now = date('Y-m-d H:i:s');
-			$result = $conn->query("INSERT INTO `borrow_history` (user_email, book_id, issue_date, return_date, fine, status) VALUES ('$user_email', '$book_id', '$now', NULL, 0, 'Requested')");
+$now = date('Y-m-d');
+$result = $conn->query("INSERT INTO `borrow_history` (user_email, book_id, issue_date, return_date, fine, status) VALUES ('$user_email', '$book_id', '$now', NULL, 0, 'Requested')");
 			
 			if(!$result){
 				echo "Something went wrong. Please try again.";

@@ -66,9 +66,9 @@ $borrowHistoryPage = array_slice($borrowHistory, ($page - 1) * $perPage, $perPag
                 <tr>
                     <th scope="row"><?php echo ++$i; ?></th>
 
-                    <td><?php echo htmlspecialchars($data["book_name"]); ?></td>
+                    <td><?php echo htmlspecialchars($data["book_name"] ?? ''); ?></td>
 
-                    <td><?php echo htmlspecialchars($data["issue_date"]); ?></td>
+                    <td><?php echo htmlspecialchars($data["issue_date"] ?? ''); ?></td>
 
                     <td>
                         <?php

@@ -26,21 +26,32 @@ $orders = $cart->getOrderHistory($userEmail);
             <thead>
                 <tr>
                     <th>Order ID</th>
-                    <th>Book IDs</th>
                     <th>Amount</th>
                     <th>Payment Date</th>
                     <th>Transaction ID</th>
+                    <th>Status</th>
                     <th>Details</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($orders as $order): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($order['id']); ?></td>
-                        <td><?php echo htmlspecialchars($order['book_ids']); ?></td>
+                        <td>#<?php echo htmlspecialchars($order['id']); ?></td>
                         <td><?php echo htmlspecialchars($order['amount']); ?> TK</td>
-                        <td><?php echo htmlspecialchars($order['payment_date']); ?></td>
-                        <td><?php echo htmlspecialchars($order['transaction_id']); ?></td>
+                        <td><?php echo date('M d, Y', strtotime($order['payment_date'])); ?></td>
+                        <td><?php echo !empty($order['transaction_id']) ? htmlspecialchars($order['transaction_id']) : 'N/A'; ?></td>
+                        <td>
+                            <?php 
+                                $status = isset($order['payment_status']) ? $order['payment_status'] : 'Completed';
+                                $badgeClass = 'bg-success';
+                                if ($status == 'Pending') {
+                                    $badgeClass = 'bg-warning text-dark';
+                                } else if ($status == 'Failed') {
+                                    $badgeClass = 'bg-danger';
+                                }
+                            ?>
+                            <span class="badge <?php echo $badgeClass; ?>"><?php echo $status; ?></span>
+                        </td>
                         <td><a href="order_details.php?id=<?php echo urlencode($order['id']); ?>" class="btn btn-primary btn-sm">View</a></td>
                     </tr>
                 <?php endforeach; ?>

@@ -28,6 +28,7 @@ logMigration("Skipping database backup step...");
 // Import new schema
 logMigration("Importing new schema...");
 try {
+    $conn->query("SET FOREIGN_KEY_CHECKS=0;");
     $sql = file_get_contents(__DIR__ . '/schema.sql');
     $conn->multi_query($sql);
     
@@ -37,7 +38,7 @@ try {
             $result->free();
         }
     }
-    
+    $conn->query("SET FOREIGN_KEY_CHECKS=1;");
     logMigration("Schema imported successfully.");
 } catch (Exception $e) {
     logMigration("Error importing schema: " . $e->getMessage());

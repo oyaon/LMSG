@@ -55,15 +55,17 @@ class Database {
      */
     public function query($sql, $types = null, $params = []) {
         $stmt = $this->conn->prepare($sql);
-        
+
         if ($stmt === false) {
+            error_log("SQL Error: " . $this->conn->error);
+            error_log("Query: " . $sql);
             return false;
         }
-        
+
         if ($types !== null && !empty($params)) {
             $stmt->bind_param($types, ...$params);
         }
-        
+
         $stmt->execute();
         return $stmt;
     }

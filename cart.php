@@ -1,5 +1,6 @@
 <?php 
 require_once 'includes/init.php';
+require_once 'includes/Cart.php';
 include ("header.php"); 
 
 if (!isset($_SESSION["email"])) {
@@ -13,6 +14,11 @@ if (!isset($_SESSION["email"])) {
 $user_email = $_SESSION["email"];
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $perPage = 10;
+
+// Get recent orders for the user
+$cart = new Cart();
+$recentOrders = $cart->getOrderHistory($user_email);
+$recentOrders = array_slice($recentOrders, 0, 3); // Get only the 3 most recent orders
 
 // Count total items
 $countQuery = "SELECT COUNT(*) as total FROM cart WHERE user_email=?";
@@ -59,7 +65,57 @@ $ids = "";
 </style>
 
 <div class="container my-5">
-	<h1 class="text-center mb-4"><u>Your Orders</u></h1>
+	<h1 class="text-center mb-4"><u>Your Cart</u></h1>
+	
+	<?php if (!empty($recentOrders)): ?>
+	<div class="card mb-4">
+		<div class="card-header bg-primary text-white">
+			<h5 class="mb-0">Recent Orders & Payment Status</h5>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead class="table-light">
+						<tr>
+							<th>Order ID</th>
+							<th>Date</th>
+							<th>Amount</th>
+							<th>Payment Status</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($recentOrders as $order): ?>
+							<tr>
+								<td>#<?php echo $order['id']; ?></td>
+								<td><?php echo date('M d, Y', strtotime($order['payment_date'])); ?></td>
+								<td><?php echo $order['amount']; ?> TK</td>
+								<td>
+									<?php 
+										$status = isset($order['payment_status']) ? $order['payment_status'] : 'Completed';
+										$badgeClass = 'bg-success';
+										if ($status == 'Pending') {
+											$badgeClass = 'bg-warning text-dark';
+										} else if ($status == 'Failed') {
+											$badgeClass = 'bg-danger';
+										}
+									?>
+									<span class="badge <?php echo $badgeClass; ?>"><?php echo $status; ?></span>
+								</td>
+								<td>
+									<a href="order_details.php?id=<?php echo $order['id']; ?>" class="btn btn-sm btn-outline-primary">View Details</a>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+			<div class="text-end mt-2">
+				<a href="order_history.php" class="btn btn-outline-primary btn-sm">View All Orders</a>
+			</div>
+		</div>
+	</div>
+	<?php endif; ?>
 
 	<table class="table table-hover table-stripped">
 		<thead>

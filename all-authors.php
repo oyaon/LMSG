@@ -15,6 +15,7 @@ include ("header.php");
                 foreach ($authors as $row) {
                     $imagePath = !empty($row['image_path']) ? $row['image_path'] : 'images/books1.png';
                     $bioShort = mb_strlen($row['biography']) > 80 ? mb_substr($row['biography'], 0, 80) . '...' : $row['biography'];
+                    $totalBooks = $bookOps->getBooksCountByAuthor((int)$row['id']);
                     ?>
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                         <div class="card p-3 h-100 text-center author-card" tabindex="0" aria-label="Author: <?php echo htmlspecialchars($row['name']); ?>">
@@ -24,6 +25,7 @@ include ("header.php");
                                 <p class="card-text text-secondary small mb-2">
                                   <a href="#" class="author-bio-link" data-bs-toggle="modal" data-bs-target="#authorModal<?php echo (int)$row['id']; ?>">Read Bio</a>
                                 </p>
+                                <p class="text-muted small mb-1">Total Books: <?php echo $totalBooks; ?> books found for this author</p>
                                 <a href="author.php?id=<?php echo (int)$row['id']; ?>" class="btn btn-outline-primary btn-sm mt-2" aria-label="View profile for <?php echo htmlspecialchars($row['name']); ?>">View Profile</a>
                             </div>
                         </div>

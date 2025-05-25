@@ -25,7 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Create new admin user
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $sql = "INSERT INTO users (email, password, user_type) VALUES (?, ?, 1)";
+            // Fix: set user_type to 0 for admin
+            $sql = "INSERT INTO users (email, password, user_type) VALUES (?, ?, 0)";
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param('ss', $email, $hashedPassword);
             if ($stmt->execute()) {
