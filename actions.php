@@ -8,7 +8,7 @@ if (isset($_GET['a'])) {
 
     switch ($action) {
         case 'reissue':
-            $stmt = $db->prepare("UPDATE `borrow_history` SET `status` = ? WHERE `id` = ?");
+            $stmt = $db->getConnection()->prepare("UPDATE `borrow_history` SET `status` = ? WHERE `id` = ?");
             $status = 'Requested';
             $stmt->bind_param('si', $status, $transactionId);
             if ($stmt->execute()) {
@@ -18,12 +18,12 @@ if (isset($_GET['a'])) {
             break;
 
         case 'delete':
-            $stmt = $db->prepare("DELETE FROM `borrow_history` WHERE `id` = ?");
+            $stmt = $db->getConnection()->prepare("DELETE FROM `borrow_history` WHERE `id` = ?");
             $stmt->bind_param('i', $transactionId);
             if ($stmt->execute()) {
                 $stmt->close();
 
-                $updateStmt = $db->prepare("UPDATE `all_books` SET `quantity` = `quantity` + 1 WHERE `id` = ?");
+                $updateStmt = $db->getConnection()->prepare("UPDATE `all_books` SET `quantity` = `quantity` + 1 WHERE `id` = ?");
                 $updateStmt->bind_param('i', $bookId);
                 if ($updateStmt->execute()) {
                     echo '<script>alert("Request deleted successfully"); window.history.go(-1);</script>';

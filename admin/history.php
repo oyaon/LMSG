@@ -15,6 +15,10 @@
 <div class="container my-5">
 	<h1 class="text-center mb-4"><u>Borrow history</u></h1>
 
+	<div class="text-center mb-3">
+		<a href="export_borrow_history.php" class="btn btn-primary">Generate Report</a>
+	</div>
+
 	<table class="table table-hover table-stripped">
 		<thead>
 			<tr>
@@ -36,12 +40,12 @@ $q = "SELECT *, borrow_history.id as id, all_books.name FROM `borrow_history` IN
 
 if(isset($_GET['t'])){
     $bookId = (int)$_GET['t'];
-    $stmt = $conn->prepare($q . " WHERE borrow_history.book_id = ?");
+    $stmt = $conn->prepare($q . " WHERE borrow_history.book_id = ? ORDER BY FIELD(borrow_history.status, 'Requested', 'Issued', 'Returned') ASC, borrow_history.issue_date DESC");
     $stmt->bind_param("i", $bookId);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $result = $conn->query($q);
+    $result = $conn->query($q . " ORDER BY FIELD(borrow_history.status, 'Requested', 'Issued', 'Returned') ASC, borrow_history.issue_date DESC");
 }
 			$i = 0;
 			while ($data = $result->fetch_array()): ?>
@@ -95,9 +99,9 @@ if(isset($_GET['t'])){
 
 					<td>
 						<?php if($data["status"] == "Requested"): ?>
-							<a href="admin_actions.php?a=issue&t=<?php echo $data["id"]; ?>" class="btn btn-success">Issue</a>
+					<button class="btn btn-success issue-btn" data-id="<?php echo $data["id"]; ?>">Issue</button>
 
-							<a href="admin_actions.php?a=decline&t=<?php echo $data["id"]; ?>" class="btn btn-danger">Decline</a>
+					<button class="btn btn-danger decline-btn" data-id="<?php echo $data["id"]; ?>">Decline</button>
 
 						<?php elseif($data["status"] == "Issued"): ?>
 							<a href="admin_actions.php?a=return&t=<?php echo $data["id"]; ?>&fine=<?php echo $fine; ?>&b_id=<?php echo $data["book_id"]; ?>" class="btn btn-primary">Book returned</a>
@@ -108,6 +112,52 @@ if(isset($_GET['t'])){
 		</tbody>
 	</table>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  function sendAction(action, id) {
+    fetch(`admin_actions.php?a=${action}&t=${id}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.success) {
+        alert(data.message);
+        // Update the row status and buttons
+        const row = document.querySelector(`button[data-id='${id}']`).closest('tr');
+        const statusCell = row.querySelector('td:nth-child(8)');
+        const actionsCell = row.querySelector('td:nth-child(9)');
+        statusCell.textContent = data.status;
+
+        if(data.status === 'Issued') {
+          actionsCell.innerHTML = `<a href="admin_actions.php?a=return&t=${id}&fine=0&b_id=0" class="btn btn-primary">Book returned</a>`;
+        } else if(data.status === 'Declined') {
+          actionsCell.innerHTML = '';
+        }
+      } else {
+        alert('Action failed');
+      }
+    })
+    .catch(() => alert('Error performing action'));
+  }
+
+  document.querySelectorAll('.issue-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.getAttribute('data-id');
+      sendAction('issue', id);
+    });
+  });
+
+  document.querySelectorAll('.decline-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.getAttribute('data-id');
+      sendAction('decline', id);
+    });
+  });
+});
+</script>
 
 <!-- book list modal -->
 <div class="modal modal-lg fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

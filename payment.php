@@ -10,7 +10,7 @@ if(!isset($_POST["submit"])){
     $ids = substr($ids, 0, -1);
 
     if($total_price==0){
-        $stmt = $db->query("INSERT INTO `payments` (id, user_email, book_ids, amount, payment_date, transaction_id) VALUES (0, ?, ?, ?, ?, '')", "ssds", [$email, $ids, $total_price, $date]);
+        $stmt = $db->query("INSERT INTO `payments` (id, user_email, book_ids, amount, payment_date, transaction_id, payment_status) VALUES (0, ?, ?, ?, ?, '', 'Pending')", "ssds", [$email, $ids, $total_price, $date]);
         if($stmt){
             $stmt2 = $db->query("UPDATE `cart` SET `status`=1 WHERE `user_email`=? AND FIND_IN_SET(book_id, ?)", "ss", [$email, $ids]);
             if($stmt2){
@@ -62,7 +62,7 @@ if(!isset($_POST["submit"])){
     <?php }
 }
 else{
-    $stmt = $db->query("INSERT INTO `payments` (id, user_email, book_ids, amount, payment_date, transaction_id) VALUES (0, ?, ?, ?, ?, ?)", "ssdss", [$email, $ids, $amount, $date, $trans_id]);
+    $stmt = $db->query("INSERT INTO `payments` (id, user_email, book_ids, amount, payment_date, transaction_id, payment_status) VALUES (0, ?, ?, ?, ?, ?, 'Pending')", "ssdss", [$email, $ids, $amount, $date, $trans_id]);
     if($stmt){
         $stmt2 = $db->query("UPDATE `cart` SET `status`=1 WHERE `user_email`=? AND FIND_IN_SET(book_id, ?)", "ss", [$email, $ids]);
         if($stmt2){

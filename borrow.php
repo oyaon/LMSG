@@ -2,7 +2,7 @@
 require_once 'includes/init.php';
 require_once 'includes/Borrow.php';
 
-session_start();
+//session_start();
 
 if (!isset($_GET['t'])) {
     echo '<script type="text/javascript">window.history.go(-1);</script>';

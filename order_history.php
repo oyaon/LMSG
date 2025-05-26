@@ -2,7 +2,9 @@
 include("header.php");
 require_once("includes/Cart.php");
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION["email"])) {
     echo '<script type="text/javascript">
         alert("Login first!");

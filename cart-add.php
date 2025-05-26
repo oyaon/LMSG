@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'includes/init.php';
-session_start();
+//session_start();
 
 if (!isset($_SESSION["email"])) {
     echo '<script type="text/javascript">
