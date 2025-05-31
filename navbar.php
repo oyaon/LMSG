@@ -73,6 +73,15 @@
                         </a>
                     </li>
                     <li class="nav-item" role="none">
+                        <!-- Removed all-authors.php link as per user request -->
+                    </li>
+                    <li class="nav-item" role="none">
+                        <!-- Removed all-authors.php link as per user request -->
+                    </li>
+                    <li class="nav-item" role="none">
+                        <!-- Removed all-authors.php link as per user request -->
+                    </li>
+                    <li class="nav-item" role="none">
                         <a class="nav-link <?php echo $currentPage == 'special-offers.php' ? 'active' : ''; ?>" href="special-offers.php" aria-label="Special Offers" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Special Offers" role="menuitem" tabindex="0">
                             <i class="fas fa-tags"></i>
                         </a>

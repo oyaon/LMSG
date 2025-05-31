@@ -23,6 +23,36 @@
 
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="css/style.css" />
+    
+    <!-- Author Pages Stylesheet -->
+    <?php 
+    $current_page = basename($_SERVER['PHP_SELF']);
+    if ($current_page == 'all-authors.php' || $current_page == 'author.php'): 
+    ?>
+    <link rel="stylesheet" href="css/author-styles.css" />
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <?php endif; ?>
+    
+    <!-- Author Pages Stylesheet -->
+    <?php 
+    $current_page = basename($_SERVER['PHP_SELF']);
+    if ($current_page == 'all-authors.php' || $current_page == 'author.php'): 
+    ?>
+    <link rel="stylesheet" href="css/author-styles.css" />
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <?php endif; ?>
+    
+    <!-- Author Pages Stylesheet -->
+    <?php 
+    $current_page = basename($_SERVER['PHP_SELF']);
+    if ($current_page == 'all-authors.php' || $current_page == 'author.php'): 
+    ?>
+    <link rel="stylesheet" href="css/author-styles.css" />
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <?php endif; ?>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">

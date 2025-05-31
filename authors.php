@@ -9,13 +9,20 @@
     if ($stmt) {
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
+            $authorImage = !empty($row['image']) ? htmlspecialchars($row['image']) : 'books1.png';
+            $bioPreview = htmlspecialchars(mb_strimwidth($row['biography'], 0, 150, '...'));
     ?>
     <div class="col-sm-3 mb-3 mb-sm-3">
       <div class="card p-3 author-card book-card-inner">
-        <img src="images/books1.png" class="card-img-top rounded-circle author-photo border-gradient" alt="...">
+        <img src="images/authors/<?php echo $authorImage; ?>" class="card-img-top rounded-circle author-photo border-gradient" alt="<?php echo htmlspecialchars($row['name']); ?>">
         <div class="card-body text-center">
-          <h5 class="card-title"><?php echo $row['name']; ?></h5>
-          <p class="card-text author-bio"><?php echo htmlspecialchars($row['biography']); ?></p>
+          <h5 class="card-title"><?php echo htmlspecialchars($row['name']); ?></h5>
+          <p class="card-text author-bio" style="max-height: 100px; overflow: hidden; transition: max-height 0.3s ease;">
+            <?php echo $bioPreview; ?>
+          </p>
+          <?php if (mb_strlen($row['biography']) > 150): ?>
+            <button class="btn btn-link bio-expand-btn p-0" type="button">Read More <i class="fas fa-chevron-down"></i></button>
+          <?php endif; ?>
         </div>
       </div>
     </div>

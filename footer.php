@@ -16,16 +16,15 @@
         </div>
     </div>
 </footer>
+<!-- Load Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Only load Bootstrap if it's not already loaded
-if (typeof bootstrap === 'undefined') {
-    console.log('Loading Bootstrap JS from footer.php');
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js';
-    document.body.appendChild(script);
-} else {
-    console.log('Bootstrap JS already loaded');
-}
+    // Verify Bootstrap is loaded
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap JS failed to load properly');
+    } else {
+        console.log('Bootstrap JS loaded successfully');
+    }
 </script>
 <script>
 // Force-enable all Bootstrap dropdowns after DOM loads
@@ -156,108 +155,6 @@ class DonationProgress {
   }
 }
 
-// --- DOMContentLoaded Handlers ---
-document.addEventListener('DOMContentLoaded', function() {
-  // --- Book Rating Stars ---
-  document.querySelectorAll('.book-card').forEach(card => {
-    const bookId = card.getAttribute('data-book-id');
-    const book = bookData.find(b => b.id === bookId);
-    if (!book) return;
-    let rating = BookRating.getRating(bookId) || BookRating.getAverage(book.reviews);
-    const starsContainer = document.createElement('div');
-    starsContainer.className = 'book-rating';
-    starsContainer.setAttribute('role', 'radiogroup');
-    for (let i = 1; i <= 5; i++) {
-      const star = document.createElement('span');
-      star.className = 'star';
-      star.setAttribute('role', 'radio');
-      star.setAttribute('aria-checked', i <= rating ? 'true' : 'false');
-      star.textContent = '★';
-      if (i <= rating) star.style.color = 'var(--warning-color)';
-      star.addEventListener('mouseenter', () => {
-        starsContainer.childNodes.forEach((s, idx) => {
-          s.classList.toggle('hover-glow', idx < i);
-        });
-      });
-      star.addEventListener('mouseleave', () => {
-        starsContainer.childNodes.forEach((s, idx) => {
-          s.classList.remove('hover-glow');
-        });
-      });
-      star.addEventListener('click', () => {
-        BookRating.setRating(bookId, i);
-        starsContainer.childNodes.forEach((s, idx) => {
-          s.style.color = idx < i ? 'var(--warning-color)' : '';
-          s.setAttribute('aria-checked', idx < i ? 'true' : 'false');
-        });
-      });
-      starsContainer.appendChild(star);
-    }
-    card.querySelector('.card-body').appendChild(starsContainer);
-  });
 
-  // --- Donation Progress ---
-  if (document.getElementById('donation-progress-bar')) {
-    new DonationProgress(5000, 2350);
-  }
-
-  // --- Author Cards: Show More toggle ---
-  document.querySelectorAll('.author-bio').forEach(bio => {
-    const full = bio.textContent;
-    if (full.length > 60) {
-      const short = full.slice(0, 60) + '...';
-      bio.textContent = short;
-      const btn = document.createElement('button');
-      btn.className = 'neo-btn-secondary btn-sm ms-2';
-      btn.textContent = 'Show More';
-      btn.addEventListener('click', () => {
-        if (bio.textContent === short) {
-          bio.textContent = full;
-          btn.textContent = 'Show Less';
-        } else {
-          bio.textContent = short;
-          btn.textContent = 'Show More';
-        }
-      });
-      bio.after(btn);
-    }
-  });
-
-  // --- Special Offers Empty State ---
-  const offers = document.querySelector('.special-offers-list');
-  if (offers && offers.children.length === 0) {
-    offers.classList.add('pulse-bg');
-    offers.innerHTML = '<div class="neo-card text-center py-5"><span class="material-icons fs-1">mail</span><h4>Check Back Soon</h4></div>';
-  }
-
-  // --- Search Bar Autocomplete ---
-  const searchInput = document.getElementById('book-search-input');
-  if (searchInput) {
-    const autocomplete = document.createElement('div');
-    autocomplete.className = 'autocomplete-list glass-container';
-    searchInput.parentNode.appendChild(autocomplete);
-    searchInput.addEventListener('input', function() {
-      const val = this.value.toLowerCase();
-      autocomplete.innerHTML = '';
-      if (!val) return;
-      bookData.filter(b => b.title.toLowerCase().includes(val)).forEach(b => {
-        const item = document.createElement('div');
-        item.textContent = b.title;
-        item.className = 'autocomplete-item';
-        item.addEventListener('mousedown', () => {
-          searchInput.value = b.title;
-          autocomplete.innerHTML = '';
-        });
-        autocomplete.appendChild(item);
-      });
-    });
-    document.addEventListener('click', e => {
-      if (!autocomplete.contains(e.target) && e.target !== searchInput) {
-        autocomplete.innerHTML = '';
-      }
-    });
-  }
-});
-</script>
 </body>
 </html>

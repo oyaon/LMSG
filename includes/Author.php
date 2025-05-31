@@ -56,7 +56,7 @@ class Author {
      * @param string $imagePath Path to author image (optional)
      * @return int|false New author ID or false on failure
      */
-    public function addAuthor($name, $biography, $bookType = '', $imagePath = '') {
+    public function addAuthor($name, $biography = '', $bookType = '', $imagePath = '') {
         try {
             $sql = "INSERT INTO `authors` (`name`, `biography`, `book_type`, `image_path`) 
                     VALUES (?, ?, ?, ?)";
@@ -125,6 +125,29 @@ class Author {
         } catch (Exception $e) {
             Helper::logError('Error searching authors: ' . $e->getMessage(), __FILE__, __LINE__);
             return [];
+        }
+    }
+
+    /**
+     * Get or create author by name
+     * 
+     * @param string $name Author name
+     * @return int|false Author ID or false on failure
+     */
+    public function getOrCreateAuthor($name) {
+        try {
+            // Check if author exists
+            $sql = "SELECT id FROM authors WHERE name = ?";
+            $author = $this->db->fetchOne($sql, 's', [$name]);
+            if ($author && isset($author['id'])) {
+                return (int)$author['id'];
+            }
+            // Create new author
+            $authorId = $this->addAuthor($name);
+            return $authorId;
+        } catch (Exception $e) {
+            Helper::logError('Error in getOrCreateAuthor: ' . $e->getMessage(), __FILE__, __LINE__);
+            return false;
         }
     }
 }
